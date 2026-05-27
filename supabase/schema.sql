@@ -1,0 +1,2 @@
+-- Este projeto usa MongoDB, não Supabase.
+-- Veja /scripts/seed-gifts.ts para popular a coleção de presentes.
