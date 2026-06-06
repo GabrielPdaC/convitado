@@ -36,7 +36,7 @@ export default function FloatingParticles({ count = 20 }: { count?: number }) {
   if (particles.length === 0) return null;
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
+    <div className="fixed inset-0 pointer-events-none z-20 overflow-hidden" aria-hidden="true">
       {particles.map((p) => (
         <div
           key={p.id}

@@ -54,7 +54,7 @@ export default function FallingPetals({ count = 12 }: { count?: number }) {
   if (petals.length === 0) return null;
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
+    <div className="fixed inset-0 pointer-events-none z-20 overflow-hidden" aria-hidden="true">
       {petals.map((p) => (
         <div
           key={p.id}

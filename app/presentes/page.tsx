@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import GiftCard from "@/components/GiftCard";
 import FallingPetals from "@/components/FallingPetals";
+import PixSection from "@/components/PixSection";
 import type { Gift } from "@/types";
 
 export default function PresentesPage() {
@@ -48,6 +49,17 @@ export default function PresentesPage() {
           </h1>
           <p className="font-heading text-sm tracking-wider" style={{ color: "#a07060" }}>
             escolha um presente para a Vanessa 🌸
+          </p>
+          <Divider />
+        </div>
+
+        {/* Pix section */}
+        <PixSection />
+
+        {/* Separator */}
+        <div className="text-center my-8">
+          <p className="font-script text-xl" style={{ color: "#a07060" }}>
+            Ou escolher um dos presentes disponíveis abaixo
           </p>
           <Divider />
         </div>
