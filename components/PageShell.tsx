@@ -1,0 +1,98 @@
+import Link from "next/link";
+import { COLORS, BLUSH_BG } from "@/components/theme";
+import { ArrowLeftIcon, SparkleIcon } from "@/components/Icons";
+
+interface PageShellProps {
+  title: string;
+  subtitle?: string;
+  children: React.ReactNode;
+  /** Show the floral bouquets at the top corners. */
+  florals?: boolean;
+}
+
+export default function PageShell({ title, subtitle, children, florals = true }: PageShellProps) {
+  return (
+    <main className="relative min-h-screen overflow-hidden" style={{ background: BLUSH_BG }}>
+      {florals && (
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-px">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/florals/bouquet-1.png"
+            alt=""
+            aria-hidden="true"
+            style={{ position: "absolute", top: -16, left: -22, width: "42%", transform: "scaleX(-1)" }}
+          />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/florals/bouquet-2.png"
+            alt=""
+            aria-hidden="true"
+            style={{ position: "absolute", top: -16, right: -22, width: "44%" }}
+          />
+        </div>
+      )}
+
+      <div
+        className="relative z-10 mx-auto w-full max-w-md px-5 pb-14"
+        style={{ paddingTop: "calc(38vw + 24px)" }}
+      >
+        <header className="text-center mb-8">
+          <SparkleRow />
+          <h1 className="font-script text-5xl" style={{ color: COLORS.pink }}>
+            {title}
+          </h1>
+          {subtitle && (
+            <p className="font-heading text-base mt-1" style={{ color: COLORS.mauve }}>
+              {subtitle}
+            </p>
+          )}
+        </header>
+
+        {children}
+
+        <div className="mt-12 text-center">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1.5 font-heading text-sm tracking-wide hover:underline"
+            style={{ color: COLORS.rose }}
+          >
+            <ArrowLeftIcon size={16} />
+            Voltar ao convite
+          </Link>
+        </div>
+      </div>
+
+      {/* Discreet butterflies near the bottom */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-0" aria-hidden="true">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/florals/butterfly-1.png"
+          alt=""
+          style={{ position: "absolute", bottom: 26, left: 14, width: "clamp(54px, 16vw, 80px)", opacity: 0.7 }}
+        />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/florals/butterfly-3.png"
+          alt=""
+          style={{ position: "absolute", bottom: 70, left: 62, width: "clamp(40px, 12vw, 58px)", opacity: 0.55, transform: "scaleX(-1)" }}
+        />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/florals/butterfly-2.png"
+          alt=""
+          style={{ position: "absolute", bottom: 34, right: 18, width: "clamp(52px, 15vw, 76px)", opacity: 0.7, transform: "scaleX(-1)" }}
+        />
+      </div>
+    </main>
+  );
+}
+
+export function SparkleRow() {
+  return (
+    <div className="flex items-center justify-center gap-3 mb-3" style={{ color: COLORS.rose }} aria-hidden="true">
+      <SparkleIcon size={9} />
+      <SparkleIcon size={14} />
+      <SparkleIcon size={9} />
+    </div>
+  );
+}

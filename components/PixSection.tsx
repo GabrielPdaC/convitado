@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { COLORS } from "@/components/theme";
+import { ChevronDownIcon, CopyIcon, CheckIcon, HeartIcon } from "@/components/Icons";
 
 const PIX_KEY = process.env.NEXT_PUBLIC_PIX_KEY ?? "";
 const PIX_NAME = process.env.NEXT_PUBLIC_PIX_NAME ?? "Vanessa";
 
 export default function PixSection() {
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(true);
   const [copied, setCopied] = useState(false);
 
   async function handleCopy() {
@@ -19,14 +21,14 @@ export default function PixSection() {
     <div
       className="rounded-2xl px-6 pt-4 pb-4"
       style={{
-        background: "linear-gradient(135deg, #fff5f8 0%, #fdf8f2 100%)",
-        border: "1px solid #f4a7b9",
-        boxShadow: "0 4px 24px rgba(224,122,153,0.08)",
+        background: "linear-gradient(135deg, #fff5f8 0%, #fff8fb 100%)",
+        border: `1px solid ${COLORS.petal}`,
+        boxShadow: "0 4px 24px rgba(196,30,99,0.08)",
       }}
     >
       {/* Header — always visible */}
       <div className="flex items-center justify-between gap-4">
-        <p className="font-script text-2xl" style={{ color: "#e07a99" }}>
+        <p className="font-script text-2xl" style={{ color: COLORS.pink }}>
           Se preferir, você pode fazer o Pix
         </p>
         <button
@@ -37,15 +39,14 @@ export default function PixSection() {
           style={{
             width: 32,
             height: 32,
-            background: "linear-gradient(135deg, #f4a7b9, #e07a99)",
+            background: "linear-gradient(135deg, #e0508a, #b3155a)",
             color: "white",
             border: "none",
-            fontSize: 14,
             transform: expanded ? "rotate(180deg)" : "rotate(0deg)",
             transition: "transform 0.3s ease",
           }}
         >
-          ▼
+          <ChevronDownIcon size={16} />
         </button>
       </div>
 
@@ -59,8 +60,9 @@ export default function PixSection() {
         }}
       >
         <div className="pt-5 text-center">
-          <p className="font-heading text-xs tracking-wider mb-5" style={{ color: "#a07060" }}>
-            sua contribuição já é um presente enorme 💛
+          <p className="flex items-center justify-center gap-1.5 font-heading text-sm tracking-wider mb-5" style={{ color: COLORS.mauve }}>
+            sua contribuição já é um presente enorme
+            <HeartIcon size={15} style={{ color: COLORS.pink }} />
           </p>
 
           {/* QR Code placeholder */}
@@ -71,11 +73,11 @@ export default function PixSection() {
                 width: 160,
                 height: 160,
                 background: "white",
-                border: "2px dashed #f4a7b9",
+                border: `2px dashed ${COLORS.petal}`,
               }}
             >
               <PixQRIcon />
-              <span className="font-heading text-xs mt-2" style={{ color: "#c9a96e" }}>
+              <span className="font-heading text-xs mt-2" style={{ color: COLORS.rose }}>
                 QR Code Pix
               </span>
             </div>
@@ -84,15 +86,15 @@ export default function PixSection() {
           {/* Pix key display */}
           <div
             className="inline-flex items-center gap-2 rounded-full px-4 py-2 mb-2"
-            style={{ background: "#fdf8f2", border: "1px solid #e8d5b0" }}
+            style={{ background: "#fff8fb", border: `1px solid ${COLORS.petal}` }}
           >
-            <span className="font-heading text-xs" style={{ color: "#a07060" }}>Chave:</span>
-            <span className="font-heading text-sm font-medium" style={{ color: "#6b4c3b", letterSpacing: "0.05em" }}>
+            <span className="font-heading text-xs" style={{ color: COLORS.mauve }}>Chave:</span>
+            <span className="font-heading text-sm font-medium" style={{ color: COLORS.wine, letterSpacing: "0.05em" }}>
               {PIX_KEY}
             </span>
           </div>
 
-          <p className="font-heading text-xs mb-5" style={{ color: "#b09090" }}>{PIX_NAME}</p>
+          <p className="font-heading text-xs mb-5" style={{ color: COLORS.rose }}>{PIX_NAME}</p>
 
           {/* Copy button */}
           <button
@@ -101,13 +103,17 @@ export default function PixSection() {
             style={{
               background: copied
                 ? "linear-gradient(135deg, #6dbb8a, #4caf70)"
-                : "linear-gradient(135deg, #f4a7b9, #e07a99)",
+                : "linear-gradient(135deg, #e0508a, #b3155a)",
               color: "white",
               border: "none",
               minWidth: 200,
             }}
           >
-            {copied ? <><span>✓</span><span>Copiado!</span></> : <><span>📋</span><span>Copiar chave Pix</span></>}
+            {copied ? (
+              <><CheckIcon size={18} /><span>Copiado!</span></>
+            ) : (
+              <><CopyIcon size={18} /><span>Copiar chave Pix</span></>
+            )}
           </button>
         </div>
       </div>

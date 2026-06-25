@@ -1,54 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
 import Link from "next/link";
+import { CheckIcon, MapPinIcon, GiftIcon } from "@/components/Icons";
 
 const MAP_URL = "https://maps.app.goo.gl/xgmK8u5MJ6WbeM7R7";
 
-type Phase = "closed" | "opening" | "open";
+const IVORY = "#f2f1e4";
+const IVORY_EDGE = "#e7e6d4";
+const BURGUNDY = "#a3155f";
 
-// 32 sparkles distributed along the loop path
-const SPARKLES: { left: string; top: string; delay: string; size: number; color: string }[] = [
-  // entry
-  { left: "86%", top: "45%", delay: "0.26s", size: 6,  color: "#c9a96e" },
-  { left: "81%", top: "44%", delay: "0.35s", size: 8,  color: "#f4a7b9" },
-  { left: "77%", top: "45%", delay: "0.44s", size: 5,  color: "#ffffff" },
-  { left: "73%", top: "44%", delay: "0.52s", size: 7,  color: "#e8d5b0" },
-  { left: "69%", top: "43%", delay: "0.60s", size: 5,  color: "#f4a7b9" },
-  { left: "65%", top: "43%", delay: "0.68s", size: 8,  color: "#c9a96e" },
-  // pre-loop ascending
-  { left: "62%", top: "42%", delay: "0.78s", size: 5,  color: "#ffffff" },
-  { left: "59%", top: "39%", delay: "0.90s", size: 7,  color: "#f4a7b9" },
-  { left: "57%", top: "36%", delay: "1.02s", size: 5,  color: "#c9a96e" },
-  { left: "55%", top: "32%", delay: "1.14s", size: 8,  color: "#ffffff" },
-  { left: "54%", top: "28%", delay: "1.26s", size: 6,  color: "#e8d5b0" },
-  // loop top — highest sparkles
-  { left: "55%", top: "25%", delay: "1.37s", size: 10, color: "#f4a7b9" },
-  { left: "57%", top: "23%", delay: "1.46s", size: 7,  color: "#c9a96e" },
-  { left: "60%", top: "22%", delay: "1.55s", size: 10, color: "#ffffff" },
-  { left: "63%", top: "22%", delay: "1.64s", size: 7,  color: "#f4a7b9" },
-  { left: "64%", top: "23%", delay: "1.72s", size: 8,  color: "#e8d5b0" },
-  // loop descending
-  { left: "63%", top: "27%", delay: "1.82s", size: 6,  color: "#c9a96e" },
-  { left: "61%", top: "32%", delay: "1.92s", size: 7,  color: "#f4a7b9" },
-  { left: "58%", top: "37%", delay: "2.02s", size: 5,  color: "#ffffff" },
-  { left: "55%", top: "41%", delay: "2.12s", size: 8,  color: "#c9a96e" },
-  { left: "52%", top: "45%", delay: "2.22s", size: 5,  color: "#e8d5b0" },
-  // bottom of loop
-  { left: "49%", top: "48%", delay: "2.35s", size: 7,  color: "#f4a7b9" },
-  { left: "46%", top: "50%", delay: "2.47s", size: 5,  color: "#c9a96e" },
-  { left: "42%", top: "51%", delay: "2.59s", size: 8,  color: "#ffffff" },
-  { left: "39%", top: "50%", delay: "2.70s", size: 5,  color: "#f4a7b9" },
-  // exit
-  { left: "36%", top: "47%", delay: "2.82s", size: 7,  color: "#c9a96e" },
-  { left: "32%", top: "44%", delay: "2.94s", size: 5,  color: "#e8d5b0" },
-  { left: "28%", top: "43%", delay: "3.06s", size: 8,  color: "#f4a7b9" },
-  { left: "24%", top: "44%", delay: "3.18s", size: 5,  color: "#c9a96e" },
-  { left: "20%", top: "43%", delay: "3.30s", size: 7,  color: "#ffffff" },
-  { left: "16%", top: "44%", delay: "3.42s", size: 5,  color: "#f4a7b9" },
-  { left: "11%", top: "43%", delay: "3.52s", size: 6,  color: "#c9a96e" },
-];
+type Phase = "closed" | "opening" | "open";
 
 // ─── Main component ───────────────────────────────────────────────────────────
 
@@ -58,26 +20,21 @@ export default function InvitationCard() {
   function handleOpen() {
     if (phase !== "closed") return;
     setPhase("opening");
-    setTimeout(() => setPhase("open"), 3800);
+    setTimeout(() => setPhase("open"), 1650);
   }
 
   if (phase === "open") {
     return (
-      <div
-        className="min-h-screen flex items-center justify-center px-4 py-12"
-        style={{ animation: "card-reveal 0.7s ease-out forwards" }}
-      >
+      <div style={{ animation: "card-reveal 0.7s ease-out forwards" }}>
         <OpenCard />
       </div>
     );
   }
 
-  return (
-    <ClosedCard isOpening={phase === "opening"} onClick={handleOpen} />
-  );
+  return <ClosedCard isOpening={phase === "opening"} onClick={handleOpen} />;
 }
 
-// ─── Closed card (full screen) ────────────────────────────────────────────────
+// ─── Closed card — faithful to page 1 of the PDF ──────────────────────────────
 
 function ClosedCard({ isOpening, onClick }: { isOpening: boolean; onClick: () => void }) {
   function handleTouchEnd(e: React.TouchEvent) {
@@ -85,6 +42,15 @@ function ClosedCard({ isOpening, onClick }: { isOpening: boolean; onClick: () =>
     e.preventDefault();
     onClick();
   }
+
+  const halfBase: React.CSSProperties = {
+    position: "absolute",
+    top: 0,
+    height: "100%",
+    width: "50%",
+    overflow: "visible",
+    backfaceVisibility: "hidden",
+  };
 
   return (
     <div
@@ -95,424 +61,425 @@ function ClosedCard({ isOpening, onClick }: { isOpening: boolean; onClick: () =>
       role="button"
       tabIndex={0}
       onKeyDown={(e) => e.key === "Enter" && onClick()}
-      style={{ touchAction: "manipulation" }}
+      style={{ touchAction: "manipulation", perspective: "1800px", background: IVORY }}
     >
-      {/* ── Top half ─────────────────────────── */}
+      {/* ── Left door ─────────────────────────── */}
       <div
-        className="absolute top-0 left-0 right-0 flex flex-col items-center justify-end pb-10 overflow-hidden"
         style={{
-          height: "50%",
-          background: "linear-gradient(180deg, #fdf8f2 0%, #f9e8ee 70%, #f5e0e8 100%)",
-          animation: isOpening ? "unfold-top 1.0s ease-in forwards" : "none",
-          animationDelay: isOpening ? "0.25s" : "0s",
+          ...halfBase,
+          left: 0,
+          transformOrigin: "left center",
+          background: `linear-gradient(100deg, ${IVORY} 0%, #f4f3e8 70%, #eceadb 100%)`,
+          animation: isOpening ? "door-left 1.15s cubic-bezier(0.5,0,0.75,0.2) 0.35s forwards" : "none",
+          boxShadow: "inset -16px 0 26px -18px rgba(120,110,90,0.35)",
         }}
       >
-        {/* Corner ornaments */}
-        <CornerOrnament pos="top-left" />
-        <CornerOrnament pos="top-right" />
-
-        {/* Top border frame */}
-        <div className="absolute inset-x-6 top-6 bottom-0 pointer-events-none"
-          style={{ border: "1px solid #e8d5b0", borderBottom: "none", opacity: 0.5 }} />
-
-        <div className="flex flex-col items-center gap-3 px-8 relative z-10">
-          <div className="flex items-center gap-3">
-            <div className="h-px w-16" style={{ background: "linear-gradient(to right, transparent, #c9a96e)" }} />
-            <span style={{ color: "#c9a96e", fontSize: 13 }}>✦</span>
-            <div className="h-px w-16" style={{ background: "linear-gradient(to left, transparent, #c9a96e)" }} />
-          </div>
-
-          <p className="font-script text-xl tracking-wide text-center" style={{ color: "#a07060" }}>
-            você está convidada
-          </p>
-
-          <div className="flex gap-3 items-center" style={{ color: "#e8d5b0", fontSize: 18 }}>
-            <span>✿</span>
-            <span style={{ color: "#f4a7b9", fontSize: 22 }}>✿</span>
-            <span>✿</span>
-          </div>
-        </div>
-
-        {/* Fold shadow */}
-        <div className="absolute bottom-0 left-0 right-0 h-12 pointer-events-none"
-          style={{ background: "linear-gradient(to bottom, transparent, rgba(180,120,120,0.07))" }} />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/florals/corner-tl.png"
+          alt=""
+          aria-hidden="true"
+          style={{ position: "absolute", top: -4, left: -8, width: "clamp(175px, 54vw, 235px)" }}
+        />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/florals/corner-bl.png"
+          alt=""
+          aria-hidden="true"
+          style={{ position: "absolute", bottom: -6, left: -8, width: "clamp(160px, 50vw, 215px)" }}
+        />
       </div>
 
-      {/* ── Bottom half ───────────────────────── */}
+      {/* ── Right door ────────────────────────── */}
       <div
-        className="absolute bottom-0 left-0 right-0 flex flex-col items-center justify-start pt-10 overflow-hidden"
         style={{
-          height: "50%",
-          background: "linear-gradient(0deg, #fdf8f2 0%, #f5e8e0 70%, #f5e0e8 100%)",
-          animation: isOpening ? "unfold-bottom 1.0s ease-in forwards" : "none",
-          animationDelay: isOpening ? "0.25s" : "0s",
+          ...halfBase,
+          right: 0,
+          transformOrigin: "right center",
+          background: `linear-gradient(260deg, ${IVORY} 0%, #f4f3e8 70%, #eceadb 100%)`,
+          animation: isOpening ? "door-right 1.15s cubic-bezier(0.5,0,0.75,0.2) 0.35s forwards" : "none",
+          boxShadow: "inset 16px 0 26px -18px rgba(120,110,90,0.35)",
         }}
       >
-        {/* Bottom border frame */}
-        <div className="absolute inset-x-6 top-0 bottom-6 pointer-events-none"
-          style={{ border: "1px solid #e8d5b0", borderTop: "none", opacity: 0.5 }} />
-
-        <CornerOrnament pos="bottom-left" />
-        <CornerOrnament pos="bottom-right" />
-
-        <div className="flex flex-col items-center gap-3 px-8 relative z-10">
-          <p className="font-heading font-light tracking-widest uppercase text-sm" style={{ color: "#a07060", letterSpacing: "0.25em" }}>
-            para os 15 anos de
-          </p>
-
-          <h1 className="font-script leading-none" style={{ fontSize: "clamp(2.8rem, 10vw, 5rem)", color: "#e07a99" }}>
-            Vanessa
-          </h1>
-
-          <p className="font-heading tracking-widest text-sm" style={{ color: "#c9a96e", letterSpacing: "0.3em" }}>
-            06 · 09 · 2026
-          </p>
-
-          <p className="font-heading text-xs tracking-widest uppercase" style={{ color: "#a07060", letterSpacing: "0.2em" }}>
-            Jardim Encantado
-          </p>
-
-          {!isOpening && (
-            <p className="font-script text-sm mt-2 animate-gentle-pulse" style={{ color: "#c9a96e" }}>
-              toque para abrir ✨
-            </p>
-          )}
-        </div>
-
-        {/* Fold shadow */}
-        <div className="absolute top-0 left-0 right-0 h-12 pointer-events-none"
-          style={{ background: "linear-gradient(to top, transparent, rgba(180,120,120,0.07))" }} />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/florals/bouquet-2.png"
+          alt=""
+          aria-hidden="true"
+          style={{ position: "absolute", top: -8, right: -10, width: "clamp(185px, 58vw, 245px)" }}
+        />
+        {/* ramo cascading from the top bouquet toward the seal */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/florals/ramo.png"
+          alt=""
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            top: "31vw",
+            right: "3%",
+            width: "clamp(62px, 21vw, 92px)",
+            transform: "rotate(16deg)",
+            transformOrigin: "top right",
+          }}
+        />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/florals/bouquet-1.png"
+          alt=""
+          aria-hidden="true"
+          style={{ position: "absolute", bottom: -10, right: -10, width: "clamp(195px, 60vw, 255px)" }}
+        />
       </div>
 
-      {/* ── Fold line ─────────────────────────── */}
+      {/* ── Center fold line ──────────────────── */}
       <div
-        className="absolute left-0 right-0 h-px pointer-events-none"
+        className="absolute top-0 bottom-0 pointer-events-none"
         style={{
-          top: "50%",
-          background: "linear-gradient(to right, transparent 5%, #c9a96e50 30%, #c9a96e70 50%, #c9a96e50 70%, transparent 95%)",
-          zIndex: 5,
+          left: "50%",
+          width: 2,
+          transform: "translateX(-1px)",
+          background:
+            "linear-gradient(to bottom, transparent 3%, rgba(150,135,110,0.18) 20%, rgba(150,135,110,0.28) 50%, rgba(150,135,110,0.18) 80%, transparent 97%)",
+          zIndex: 12,
+          opacity: isOpening ? 0 : 1,
+          transition: "opacity 0.3s ease",
         }}
       />
 
       {/* ── Wax seal ──────────────────────────── */}
-      <WaxSeal isBreaking={isOpening} />
+      <div
+        className="absolute"
+        style={{
+          top: "50%",
+          left: "50%",
+          zIndex: 20,
+          transform: "translate(-50%, -50%)",
+          animation: isOpening
+            ? "seal-break 0.6s ease-out forwards"
+            : "seal-pulse 2.8s ease-in-out infinite",
+          width: "clamp(190px, 54vw, 280px)",
+        }}
+      >
+        <WaxSeal />
+      </div>
     </div>
   );
 }
 
-// ─── Wax seal ─────────────────────────────────────────────────────────────────
+// ─── Wax seal (white melted wax with V monogram) ──────────────────────────────
 
-function WaxSeal({ isBreaking }: { isBreaking: boolean }) {
-  const pts = [0, 40, 80, 120, 160, 200, 240, 280, 320].map((angle) => {
-    const r = (angle * Math.PI) / 180;
-    return {
-      x: Math.round((45 + 31 * Math.cos(r)) * 100) / 100,
-      y: Math.round((45 + 31 * Math.sin(r)) * 100) / 100,
-    };
-  });
+const SEAL_BLOB =
+  "M 100.00 14.00 C 111.79 14.45, 123.24 22.73, 134.71 27.92 C 146.18 33.11, 161.26 36.16, 168.80 45.13 C 176.34 54.10, 176.79 69.27, 179.94 81.75 C 183.10 94.24, 190.25 108.36, 187.74 120.03 C 185.23 131.69, 173.22 142.02, 164.89 151.75 C 156.56 161.48, 148.56 173.51, 137.75 178.38 C 126.93 183.26, 112.73 180.70, 100.00 181.00 C 87.27 181.30, 72.33 184.96, 61.38 180.19 C 50.44 175.42, 41.86 162.55, 34.33 152.37 C 26.79 142.20, 18.53 130.91, 16.16 119.14 C 13.78 107.37, 17.81 94.30, 20.06 81.75 C 22.30 69.21, 22.31 53.31, 29.64 43.89 C 36.96 34.46, 52.26 30.20, 63.99 25.22 C 75.72 20.24, 88.21 13.55, 100.00 14.00 Z";
 
+const SEAL_FLOWER =
+  "M 80.0 106.0 Q 85.0 97.5 80.0 89.0 Q 75.0 97.5 80.0 106.0 Z M 80.0 106.0 Q 87.5 101.5 87.0 92.8 Q 79.5 97.3 80.0 106.0 Z M 80.0 106.0 Q 80.5 97.3 73.0 92.8 Q 72.5 101.5 80.0 106.0 Z M 80.0 106.0 Q 87.2 105.5 89.5 98.6 Q 82.3 99.2 80.0 106.0 Z M 80.0 106.0 Q 77.7 99.2 70.5 98.6 Q 72.8 105.5 80.0 106.0 Z";
+
+function WaxSeal() {
+  return (
+    <svg
+      viewBox="0 0 200 200"
+      width="100%"
+      height="100%"
+      aria-label="clique para abrir"
+      role="img"
+      style={{ overflow: "visible" }}
+    >
+      <defs>
+        <radialGradient id="wax" cx="38%" cy="30%" r="72%">
+          <stop offset="0%" stopColor="#ffffff" />
+          <stop offset="38%" stopColor="#f2f1ef" />
+          <stop offset="72%" stopColor="#dadade" />
+          <stop offset="100%" stopColor="#bdbdc6" />
+        </radialGradient>
+        <radialGradient id="disc" cx="42%" cy="36%" r="70%">
+          <stop offset="0%" stopColor="#fbfbfa" />
+          <stop offset="70%" stopColor="#eceaea" />
+          <stop offset="100%" stopColor="#d6d6db" />
+        </radialGradient>
+        <filter id="sealShadow" x="-30%" y="-30%" width="160%" height="160%">
+          <feDropShadow dx="0" dy="3" stdDeviation="4" floodColor="#7a6a70" floodOpacity="0.35" />
+        </filter>
+        <path id="sealArc" d="M 21.2 170.9 A 106 106 0 0 1 21.2 29.1" fill="none" />
+      </defs>
+
+      {/* melted wax body */}
+      <g filter="url(#sealShadow)">
+        <path d={SEAL_BLOB} fill="url(#wax)" stroke="#b9b9c0" strokeWidth="0.6" />
+      </g>
+
+      {/* stamped rings */}
+      <circle cx="100" cy="100" r="72" fill="none" stroke="#c4c4cb" strokeWidth="2.4" opacity="0.7" />
+      <circle cx="100" cy="100" r="66" fill="url(#disc)" stroke="#cdcdd2" strokeWidth="1" />
+      <circle cx="100" cy="100" r="60" fill="none" stroke="#c9c9d0" strokeWidth="1.2" opacity="0.6" />
+      <circle cx="100" cy="100" r="56" fill="none" stroke="#d8d8dd" strokeWidth="0.8" opacity="0.6" />
+
+      {/* V monogram */}
+      <text
+        x="104"
+        y="138"
+        textAnchor="middle"
+        fontFamily="Georgia, 'Cormorant Garamond', serif"
+        fontSize="92"
+        fontWeight="500"
+        fill={BURGUNDY}
+      >
+        V
+      </text>
+
+      {/* lotus flower entwined */}
+      <path d={SEAL_FLOWER} fill={BURGUNDY} opacity="0.9" />
+      <path d="M 80 106 q -2 10 -8 15" fill="none" stroke={BURGUNDY} strokeWidth="1.4" strokeLinecap="round" opacity="0.85" />
+
+      {/* curved text */}
+      <text
+        fontFamily="Georgia, 'Cormorant Garamond', serif"
+        fontSize="12"
+        letterSpacing="1.2"
+        fontStyle="italic"
+        fill={BURGUNDY}
+      >
+        <textPath href="#sealArc" startOffset="8%">
+          clique para abrir
+        </textPath>
+      </text>
+    </svg>
+  );
+}
+
+// ─── Open card — faithful to page 2 of the PDF ────────────────────────────────
+
+const PINK = "#c41e63";
+const PINK_DEEP = "#a3155f";
+const WINE = "#8e1b4d";
+
+function OpenCard() {
   return (
     <div
-      className="absolute pointer-events-none"
+      className="relative w-full min-h-screen overflow-hidden"
       style={{
-        top: "50%",
-        left: "50%",
-        zIndex: 15,
-        animation: isBreaking ? "seal-break 0.45s ease-out forwards" : "none",
-        transform: "translate(-50%, -50%)",
+        background: "linear-gradient(170deg, #fff6f9 0%, #fdeaf1 45%, #fff4f8 100%)",
       }}
     >
-      <svg width="92" height="92" viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <defs>
-          <radialGradient id="seal-grad" cx="38%" cy="30%" r="65%">
-            <stop offset="0%" stopColor="#e8849c" />
-            <stop offset="60%" stopColor="#c0496b" />
-            <stop offset="100%" stopColor="#9e3255" />
-          </radialGradient>
-          <filter id="seal-glow">
-            <feGaussianBlur stdDeviation="2" result="blur" />
-            <feComposite in="SourceGraphic" in2="blur" operator="over" />
-          </filter>
-        </defs>
+      {/* Floral top border */}
+      <div className="relative h-px">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/florals/bouquet-1.png"
+          alt=""
+          aria-hidden="true"
+          style={{ position: "absolute", top: -14, left: -18, width: "48%", transform: "scaleX(-1)" }}
+        />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/florals/bouquet-2.png"
+          alt=""
+          aria-hidden="true"
+          style={{ position: "absolute", top: -14, right: -18, width: "50%" }}
+        />
+      </div>
 
-        {/* Outer glow ring */}
-        <circle cx="45" cy="45" r="44" fill="none" stroke="#c9a96e" strokeWidth="0.6" opacity="0.35" />
-
-        {/* Main seal */}
-        <circle cx="45" cy="45" r="38" fill="url(#seal-grad)" />
-
-        {/* Scalloped / dashed border */}
-        <circle cx="45" cy="45" r="35" fill="none" stroke="#e8d5b0" strokeWidth="1.4" strokeDasharray="5,2.8" opacity="0.7" />
-
-        {/* Inner ring */}
-        <circle cx="45" cy="45" r="27" fill="none" stroke="#e8d5b0" strokeWidth="0.7" opacity="0.4" />
-
-        {/* Decorative dots on the inner border */}
-        {pts.map((p, i) => (
-          <circle key={i} cx={p.x} cy={p.y} r="1.4" fill="#e8d5b0" opacity="0.55" />
-        ))}
-
-        {/* Small fleur ornaments */}
-        <text x="45" y="20" textAnchor="middle" fontSize="7" fill="#e8d5b0" opacity="0.5" fontFamily="serif">✿</text>
-        <text x="45" y="74" textAnchor="middle" fontSize="7" fill="#e8d5b0" opacity="0.5" fontFamily="serif">✿</text>
-
+      <div
+        className="px-7 pb-10 text-center relative z-10 max-w-md mx-auto"
+        style={{ paddingTop: "calc(36vw + 16px)" }}
+      >
         {/* Monogram */}
-        <text x="45" y="53" textAnchor="middle" fontSize="28" fontFamily="Georgia, 'Cormorant Garamond', serif" fill="#fdf8f2" opacity="0.92">
-          V
+        <Monogram />
+
+        <h1
+          className="font-script leading-none mt-2"
+          style={{ fontSize: "clamp(3rem, 13vw, 4.6rem)", color: PINK }}
+        >
+          Vanessa
+        </h1>
+        <p
+          className="font-script -mt-1"
+          style={{ fontSize: "clamp(1.4rem, 6vw, 2rem)", color: "#cf6f95" }}
+        >
+          15 anos
+        </p>
+
+        <SparkleRow />
+
+        {/* Message */}
+        <p
+          className="font-heading mx-auto mt-3 mb-7"
+          style={{
+            maxWidth: 340,
+            fontSize: "clamp(1rem, 4.2vw, 1.18rem)",
+            lineHeight: 1.5,
+            color: WINE,
+          }}
+        >
+          Celebrar com as pessoas que amamos é a melhor coisa da vida, por isso, quero muito que
+          você esteja presente na minha festa de 15 anos. Será um momento único, em que guardarei
+          todas as lembranças pelo resto de minha vida.
+        </p>
+
+        {/* Date block */}
+        <DateBlock />
+
+        {/* Location */}
+        <div className="mt-6 font-heading" style={{ color: WINE }}>
+          <p className="text-base font-medium">Lumaki festas e eventos</p>
+          <p className="text-sm" style={{ color: "#a85278" }}>
+            Rua Vicentina Maria Fidélis, 387, no bairro
+          </p>
+          <p className="text-sm" style={{ color: "#a85278" }}>
+            Vicentina, em São Leopoldo (RS)
+          </p>
+        </div>
+
+        {/* Interactive icons */}
+        <div className="mt-8 grid grid-cols-3 gap-2">
+          <IconAction
+            href="/confirmar"
+            label="Confirme sua presença"
+            icon={<CheckIcon size={26} />}
+          />
+          <IconAction
+            href={MAP_URL}
+            external
+            label="Localização"
+            icon={<MapPinIcon size={24} />}
+          />
+          <IconAction
+            href="/presentes"
+            label="Ideias de presentes"
+            icon={<GiftIcon size={24} />}
+          />
+        </div>
+
+        <p className="mt-7 font-heading text-sm font-semibold underline" style={{ color: PINK }}>
+          Clique nos ícones para interagir.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function Monogram() {
+  return (
+    <div className="flex items-center justify-center" aria-hidden="true">
+      <svg width="76" height="60" viewBox="0 0 100 80">
+        <text
+          x="50"
+          y="56"
+          textAnchor="middle"
+          fontFamily="'Dancing Script', cursive"
+          fontSize="52"
+          fontWeight="700"
+          fill={PINK_DEEP}
+        >
         </text>
+        {/* little leaf sprig */}
+        <path
+          d="M50 20 q 8 -6 16 -3 q -6 5 -16 3 Z"
+          fill="#cf6f95"
+          opacity="0.8"
+        />
+        <path d="M50 20 q -2 -8 -2 -14" stroke="#cf6f95" strokeWidth="1.4" fill="none" strokeLinecap="round" />
       </svg>
     </div>
   );
 }
 
-// ─── Flying butterfly + sparkle trail ────────────────────────────────────────
-
-// Side-profile butterfly SVG (facing left, wings flap up/down)
-function SideButterfly() {
-  const wingStyle = (origin: string): React.CSSProperties => ({
-    transformBox: "fill-box",
-    transformOrigin: origin,
-    animation: "wing-flap-side 0.65s ease-in-out infinite",
-  });
-
+function SparkleRow() {
   return (
-    <svg width="96" height="67" viewBox="0 0 80 56" fill="none" aria-hidden="true">
-      {/* Upper wing (above body) — folds downward toward body */}
-      <g style={wingStyle("center bottom")}>
-        <path
-          d="M20,27 C18,18 22,8 34,4 C46,1 58,8 62,19 C64,25 62,27 52,27 Z"
-          fill="#e07a99" opacity="0.88"
-        />
-        {/* inner lighter */}
-        <path
-          d="M22,27 C21,20 26,12 36,9 C46,7 56,12 59,21 C60,25 58,27 50,27 Z"
-          fill="#f9b8cc" opacity="0.35"
-        />
-        <circle cx="34" cy="16" r="3.5" fill="white" opacity="0.2" />
-        <circle cx="46" cy="10" r="2" fill="white" opacity="0.15" />
-        {/* vein */}
-        <path d="M22,27 C28,20 38,10 46,6" stroke="#e07a99" strokeWidth="0.4" fill="none" opacity="0.22" />
-      </g>
+    <div className="flex items-center justify-center gap-3 my-2" aria-hidden="true">
+      <Sparkle size={9} />
+      <Sparkle size={13} />
+      <Sparkle size={9} />
+    </div>
+  );
+}
 
-      {/* Lower wing (below body) — smaller, folds upward toward body */}
-      <g style={wingStyle("center top")}>
-        <path
-          d="M23,30 C21,38 24,46 34,50 C42,52 54,48 58,40 C60,36 58,30 48,30 Z"
-          fill="#e07a99" opacity="0.72"
-        />
-        <path
-          d="M26,30 C25,36 28,43 36,46 C43,48 52,44 55,38 C56,35 55,30 47,30 Z"
-          fill="#f9b8cc" opacity="0.28"
-        />
-        <circle cx="36" cy="43" r="2.2" fill="white" opacity="0.15" />
-      </g>
-
-      {/* Body */}
-      <ellipse cx="38" cy="29" rx="22" ry="4" fill="#8B6F6F" opacity="0.82" />
-      {/* Head */}
-      <circle cx="16" cy="29" r="5" fill="#8B6F6F" opacity="0.78" />
-      {/* Eye */}
-      <circle cx="13" cy="28" r="1.4" fill="white" opacity="0.5" />
-
-      {/* Antennae (facing left — going forward-up) */}
-      <path d="M17,24 C14,17 11,11 7,7" stroke="#9a7a6a" strokeWidth="0.9" fill="none" opacity="0.65" strokeLinecap="round" />
-      <path d="M20,24 C18,17 16,11 14,7" stroke="#9a7a6a" strokeWidth="0.9" fill="none" opacity="0.65" strokeLinecap="round" />
-      <circle cx="7"  cy="7"  r="1.5" fill="#9a7a6a" opacity="0.65" />
-      <circle cx="14" cy="7"  r="1.5" fill="#9a7a6a" opacity="0.65" />
+function Sparkle({ size }: { size: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 20 20" fill={PINK}>
+      <path d="M10 0 L12 8 L20 10 L12 12 L10 20 L8 12 L0 10 L8 8 Z" />
     </svg>
   );
 }
 
-function FlyingButterflyAnim() {
-  // 12 keyframes for a fluid organic loop: enters right → flies in → ascends into loop → curves over top → descends → exits left
-  const ts = [0, 0.07, 0.16, 0.26, 0.35, 0.44, 0.52, 0.61, 0.70, 0.80, 0.90, 1.0];
-
-  const xPath = [
-    "calc(110vw + 80px)", "90vw",  "76vw",  "63vw",
-    "58vw",               "64vw",  "62vw",  "54vw",
-    "45vw",               "34vw",  "19vw",  "calc(-110vw - 80px)",
-  ];
-  const yPath = [
-    "0vh",   "-1vh",  "-3vh",  "-7vh",
-    "-17vh", "-27vh", "-25vh", "-14vh",
-    "3vh",   "-2vh",  "-1vh",  "0vh",
-  ];
-  // banking: nose-up while ascending, nose-down over loop top, levels on exit
-  const rot = [-5, -5, -9, -16, -24, -2, 17, 13, -2, -8, -7, -5];
-  const ops = [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0.6, 0];
-
-  return (
-    <div className="fixed inset-0 pointer-events-none z-40" aria-hidden="true">
-      {/* Butterfly */}
-      <motion.div
-        style={{ position: "absolute", top: "45%" }}
-        initial={{ x: "calc(110vw + 80px)", y: "0vh", rotate: -5, opacity: 0 }}
-        animate={{ x: xPath, y: yPath, rotate: rot, opacity: ops }}
-        transition={{
-          x:       { duration: 3.6, ease: [0.25, 0.1, 0.25, 1.0], times: ts },
-          y:       { duration: 3.6, ease: [0.42, 0, 0.58, 1],     times: ts },
-          rotate:  { duration: 3.6, ease: [0.42, 0, 0.58, 1],     times: ts },
-          opacity: { duration: 3.6, ease: "linear",                times: ts },
-        }}
-      >
-        <SideButterfly />
-      </motion.div>
-
-      {/* Sparkle trail */}
-      {SPARKLES.map((s, i) => (
-        <div
-          key={i}
-          className="absolute rounded-full"
-          style={{
-            left: s.left,
-            top: s.top,
-            width: s.size,
-            height: s.size,
-            backgroundColor: s.color,
-            boxShadow: `0 0 ${s.size}px ${s.color}, 0 0 ${s.size * 3}px ${s.color}, 0 0 ${s.size * 6}px ${s.color}60`,
-            opacity: 0,
-            animation: "sparkle-trail 1.0s ease-in-out forwards",
-            animationDelay: s.delay,
-          }}
-        />
-      ))}
-    </div>
-  );
-}
-
-// ─── Corner ornament ──────────────────────────────────────────────────────────
-
-type CornerPos = "top-left" | "top-right" | "bottom-left" | "bottom-right";
-
-function CornerOrnament({ pos }: { pos: CornerPos }) {
-  const style: React.CSSProperties = {
-    position: "absolute",
-    color: "#c9a96e",
-    opacity: 0.45,
-    fontSize: 18,
-    lineHeight: 1,
-    ...(pos === "top-left"     && { top: 10, left: 12 }),
-    ...(pos === "top-right"    && { top: 10, right: 12 }),
-    ...(pos === "bottom-left"  && { bottom: 10, left: 12 }),
-    ...(pos === "bottom-right" && { bottom: 10, right: 12 }),
-  };
-  return <span style={style} aria-hidden="true">✦</span>;
-}
-
-// ─── Open card (revealed after animation) ────────────────────────────────────
-
-function OpenCard() {
+function DateBlock() {
   return (
     <div
-      className="invitation-shadow rounded-2xl overflow-hidden"
-      style={{
-        width: "min(480px, 95vw)",
-        background: "linear-gradient(160deg, #fdf8f2 0%, #f9e4ec 40%, #fdf8f2 70%, #f5e6d3 100%)",
-        border: "1px solid #e8d5b0",
-      }}
+      className="mx-auto flex items-stretch rounded-xl overflow-hidden"
+      style={{ maxWidth: 360, border: `2px solid ${PINK}` }}
     >
-      <div className="h-2" style={{ background: "linear-gradient(to right, #f4a7b9, #c9a96e, #f4a7b9)" }} />
+      <div className="flex-1 flex flex-col items-center justify-center py-4 px-2">
+        <span className="font-heading text-lg font-bold tracking-widest uppercase" style={{ color: PINK_DEEP }}>
+          Domingo
+        </span>
+        <span className="font-heading text-base font-semibold" style={{ color: "#a85278" }}>
+          20:00
+        </span>
+      </div>
 
-      <div className="px-8 py-10 text-center">
-        <Ornament />
-
-        <p className="font-script text-base mb-2" style={{ color: "#a07060" }}>com muito amor, convidamos</p>
-        <p className="font-script text-base mb-6" style={{ color: "#c9a96e" }}>você para celebrar</p>
-
-        <p className="font-heading font-light tracking-widest uppercase mb-1"
-          style={{ fontSize: "clamp(0.75rem, 2.5vw, 0.9rem)", color: "#a07060", letterSpacing: "0.35em" }}>
-          o aniversário de
-        </p>
-
-        <h2 className="font-script mb-1"
-          style={{ fontSize: "clamp(3rem, 12vw, 4.5rem)", color: "#e07a99", lineHeight: 1.1 }}>
-          Vanessa
-        </h2>
-
-        <div className="shimmer-text font-heading font-semibold text-4xl mb-6">15</div>
-
-        <Divider />
-
-        <div className="space-y-3 my-6 font-heading">
-          <DetailRow icon="🌸" label="Tema"    value="Jardim Encantado" />
-          <DetailRow icon="📅" label="Data"    value="06 de setembro de 2026" />
-          <DetailRow icon="🕗" label="Horário" value="20h" />
-          <DetailRow icon="🏛️" label="Local"   value="Salão Festa Lumaki" />
-          <DetailRow icon="📍" label="Endereço" value="Vicentina Maria Fidélis, 387 · Vicentina" />
-        </div>
-
-        <Divider />
-
-        <div className="mt-8 flex flex-col gap-3">
-          <a
-            href={MAP_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 py-3 px-6 rounded-full font-heading tracking-wider text-sm transition-all duration-200 hover:scale-105 active:scale-95"
-            style={{ background: "linear-gradient(135deg, #c9a96e, #e8d5b0)", color: "#3d2c1e", border: "1px solid #c9a96e" }}
-          >
-            <span>📍</span><span>Ver no Mapa</span>
-          </a>
-
-          <Link
-            href="/presentes"
-            className="flex items-center justify-center gap-2 py-3 px-6 rounded-full font-heading tracking-wider text-sm transition-all duration-200 hover:scale-105 active:scale-95"
-            style={{ background: "transparent", color: "#e07a99", border: "1px solid #f4a7b9" }}
-          >
-            <span>🎁</span><span>Lista de Presentes</span>
-          </Link>
-
-          <Link
-            href="/confirmar"
-            className="flex items-center justify-center gap-2 py-3 px-6 rounded-full font-heading tracking-wider text-sm transition-all duration-200 hover:scale-105 active:scale-95"
-            style={{ background: "linear-gradient(135deg, #f4a7b9, #e07a99)", color: "white" }}
-          >
-            <span>✓</span><span>Confirmar Presença</span>
-          </Link>
-        </div>
-
-        <div className="mt-8">
-          <Ornament />
-          <p className="font-script text-sm mt-3" style={{ color: "#c9a96e" }}>te esperamos lá ✨</p>
+      <div className="flex items-center justify-center px-1" style={{ borderLeft: `2px solid ${PINK}`, borderRight: `2px solid ${PINK}` }}>
+        <div className="flex items-center justify-center rounded-full m-2.5" style={{ width: 60, height: 60, border: `2px solid ${PINK}` }}>
+          <span className="font-heading text-4xl font-bold leading-none" style={{ color: PINK_DEEP }}>
+            06
+          </span>
         </div>
       </div>
 
-      <div className="h-2" style={{ background: "linear-gradient(to right, #f4a7b9, #c9a96e, #f4a7b9)" }} />
+      <div className="flex-1 flex flex-col items-center justify-center py-4 px-2">
+        <span className="font-heading text-lg font-bold tracking-widest uppercase" style={{ color: PINK_DEEP }}>
+          Setembro
+        </span>
+        <span className="font-heading text-base font-semibold" style={{ color: "#a85278" }}>
+          2026
+        </span>
+      </div>
     </div>
   );
 }
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function DetailRow({ icon, label, value }: { icon: string; label: string; value: string }) {
-  return (
-    <div className="flex flex-col items-center">
-      <span className="text-xs tracking-widest uppercase mb-0.5" style={{ color: "#c9a96e" }}>
-        {icon} {label}
+function IconAction({
+  href,
+  label,
+  icon,
+  external,
+}: {
+  href: string;
+  label: string;
+  icon: React.ReactNode;
+  external?: boolean;
+}) {
+  const inner = (
+    <>
+      <span
+        className="flex items-center justify-center rounded-full transition-all duration-200 group-hover:scale-110 group-active:scale-95"
+        style={{
+          width: 56,
+          height: 56,
+          color: "white",
+          background: "linear-gradient(135deg, #e0508a, #b3155a)",
+          boxShadow: "0 6px 16px rgba(179,21,90,0.28)",
+        }}
+      >
+        {icon}
       </span>
-      <span className="text-base font-light" style={{ color: "#6b4c3b" }}>{value}</span>
-    </div>
+      <span className="font-heading text-xs leading-tight font-medium" style={{ color: WINE }}>
+        {label}
+      </span>
+    </>
   );
-}
 
-function Divider() {
-  return (
-    <div className="flex items-center gap-3 my-4">
-      <div className="flex-1 h-px" style={{ background: "linear-gradient(to right, transparent, #e8d5b0)" }} />
-      <span style={{ color: "#c9a96e" }}>✦</span>
-      <span style={{ color: "#e07a99", fontSize: 10 }}>✿</span>
-      <span style={{ color: "#c9a96e" }}>✦</span>
-      <div className="flex-1 h-px" style={{ background: "linear-gradient(to left, transparent, #e8d5b0)" }} />
-    </div>
-  );
-}
+  const cls = "group flex flex-col items-center gap-2 text-center";
 
-function Ornament() {
+  if (external) {
+    return (
+      <a href={href} target="_blank" rel="noopener noreferrer" className={cls}>
+        {inner}
+      </a>
+    );
+  }
   return (
-    <div className="flex items-center justify-center gap-2 mb-4">
-      <span style={{ color: "#e8d5b0", fontSize: 12 }}>✦</span>
-      <span style={{ color: "#f4a7b9", fontSize: 16 }}>✿</span>
-      <span style={{ color: "#e8d5b0", fontSize: 12 }}>✦</span>
-    </div>
+    <Link href={href} className={cls}>
+      {inner}
+    </Link>
   );
 }

@@ -6,6 +6,10 @@ export interface Confirmation {
   created_at: string;
 }
 
+export interface Settings {
+  giftControlEnabled: boolean;
+}
+
 export interface Gift {
   id: string;
   name: string;

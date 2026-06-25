@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import type { Confirmation, Gift } from "@/types";
+import { COLORS } from "@/components/theme";
+import { CheckIcon, UsersIcon, GiftIcon, ArrowLeftIcon } from "@/components/Icons";
 
 type Tab = "confirmacoes" | "presentes";
 
@@ -10,16 +12,19 @@ export default function AdminPage() {
   const [tab, setTab] = useState<Tab>("confirmacoes");
   const [confirmations, setConfirmations] = useState<Confirmation[]>([]);
   const [gifts, setGifts] = useState<Gift[]>([]);
+  const [giftControlEnabled, setGiftControlEnabled] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     Promise.all([
       fetch("/api/confirmations").then((r) => r.json()),
       fetch("/api/gifts").then((r) => r.json()),
+      fetch("/api/settings").then((r) => r.json()),
     ])
-      .then(([conf, gift]) => {
+      .then(([conf, gift, settings]) => {
         setConfirmations(conf);
         setGifts(gift);
+        setGiftControlEnabled(Boolean(settings?.giftControlEnabled));
       })
       .finally(() => setLoading(false));
   }, []);
@@ -32,59 +37,70 @@ export default function AdminPage() {
   const reservedGifts = gifts.filter((g) => g.reserved);
 
   return (
-    <main className="min-h-screen px-4 py-10" style={{ background: "#fdf8f2" }}>
+    <main className="min-h-screen px-4 py-10" style={{ background: "#fff8fb" }}>
       <div className="max-w-3xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-2">
             <div>
-              <h1 className="font-heading text-2xl font-semibold" style={{ color: "#6b4c3b" }}>
+              <h1 className="font-heading text-2xl font-semibold" style={{ color: "#8e1b4d" }}>
                 Painel Administrativo
               </h1>
-              <p className="font-body text-sm" style={{ color: "#a07060" }}>
+              <p className="font-body text-sm" style={{ color: "#a85278" }}>
                 Vanessa · 15 Anos · 06/09/2026
               </p>
             </div>
-            <Link href="/" className="font-heading text-xs tracking-wider hover:underline" style={{ color: "#c9a96e" }}>
-              ← Convite
+            <Link href="/" className="inline-flex items-center gap-1.5 font-heading text-xs tracking-wider hover:underline" style={{ color: COLORS.rose }}>
+              <ArrowLeftIcon size={14} />
+              Convite
             </Link>
           </div>
 
           <div className="grid grid-cols-3 gap-3 mt-4">
-            <SummaryCard label="Confirmações" value={confirmations.length} icon="✓" />
-            <SummaryCard label="Total de pessoas" value={totalGuests} icon="👥" />
-            <SummaryCard label="Presentes reservados" value={reservedGifts.length} icon="🎁" />
+            <SummaryCard label="Confirmações" value={confirmations.length} icon={<CheckIcon size={22} />} />
+            <SummaryCard label="Total de pessoas" value={totalGuests} icon={<UsersIcon size={22} />} />
+            <SummaryCard label="Presentes reservados" value={reservedGifts.length} icon={<GiftIcon size={22} />} />
           </div>
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-1 mb-6 p-1 rounded-xl" style={{ background: "#f5e6d3" }}>
+        <div className="flex gap-1 mb-6 p-1 rounded-xl" style={{ background: "#fdeaf1" }}>
           <TabButton label="Confirmações" active={tab === "confirmacoes"} onClick={() => setTab("confirmacoes")} />
           <TabButton label="Presentes" active={tab === "presentes"} onClick={() => setTab("presentes")} />
         </div>
 
         {loading ? (
           <div className="text-center py-16">
-            <p className="font-script text-2xl animate-gentle-pulse" style={{ color: "#e07a99" }}>
+            <p className="font-script text-2xl animate-gentle-pulse" style={{ color: "#c41e63" }}>
               carregando...
             </p>
           </div>
         ) : tab === "confirmacoes" ? (
           <ConfirmationsTab confirmations={confirmations} />
         ) : (
-          <GiftsTab gifts={gifts} onGiftAdded={handleGiftAdded} />
+          <GiftsTab
+            gifts={gifts}
+            onGiftAdded={handleGiftAdded}
+            giftControlEnabled={giftControlEnabled}
+            onGiftControlChange={setGiftControlEnabled}
+          />
         )}
       </div>
     </main>
   );
 }
 
-function SummaryCard({ label, value, icon }: { label: string; value: number; icon: string }) {
+function SummaryCard({ label, value, icon }: { label: string; value: number; icon: React.ReactNode }) {
   return (
-    <div className="rounded-xl p-4 text-center" style={{ background: "white", border: "1px solid #e8d5b0" }}>
-      <div className="text-2xl mb-1">{icon}</div>
-      <div className="font-heading text-2xl font-semibold" style={{ color: "#e07a99" }}>{value}</div>
-      <div className="font-body text-xs" style={{ color: "#a07060" }}>{label}</div>
+    <div className="rounded-xl p-4 text-center" style={{ background: "white", border: `1px solid ${COLORS.petal}` }}>
+      <div
+        className="mx-auto mb-2 flex items-center justify-center rounded-full"
+        style={{ width: 38, height: 38, color: "white", background: "linear-gradient(135deg, #e0508a, #b3155a)" }}
+      >
+        {icon}
+      </div>
+      <div className="font-heading text-2xl font-bold" style={{ color: COLORS.pink }}>{value}</div>
+      <div className="font-body text-xs" style={{ color: COLORS.mauve }}>{label}</div>
     </div>
   );
 }
@@ -96,7 +112,7 @@ function TabButton({ label, active, onClick }: { label: string; active: boolean;
       className="flex-1 py-2 px-4 rounded-lg font-heading text-sm tracking-wider transition-all"
       style={{
         background: active ? "white" : "transparent",
-        color: active ? "#e07a99" : "#a07060",
+        color: active ? "#c41e63" : "#a85278",
         boxShadow: active ? "0 1px 4px rgba(0,0,0,0.08)" : "none",
       }}
     >
@@ -160,8 +176,8 @@ function AddGiftForm({ onAdded }: AddGiftFormProps) {
         onClick={() => setOpen(true)}
         className="w-full py-3 rounded-xl font-heading text-sm tracking-wider transition-all hover:scale-[1.01] active:scale-[0.99]"
         style={{
-          border: "1.5px dashed #f4a7b9",
-          color: "#e07a99",
+          border: "1.5px dashed #e0508a",
+          color: "#c41e63",
           background: "transparent",
         }}
       >
@@ -174,14 +190,14 @@ function AddGiftForm({ onAdded }: AddGiftFormProps) {
     <form
       onSubmit={handleSubmit}
       className="rounded-xl p-5 space-y-4"
-      style={{ background: "white", border: "1px solid #e8d5b0" }}
+      style={{ background: "white", border: "1px solid #f0c6d6" }}
     >
-      <h3 className="font-heading text-base font-medium" style={{ color: "#6b4c3b" }}>
+      <h3 className="font-heading text-base font-medium" style={{ color: "#8e1b4d" }}>
         Novo presente
       </h3>
 
       <div>
-        <label className="block font-heading text-xs tracking-widest uppercase mb-1.5" style={{ color: "#c9a96e" }}>
+        <label className="block font-heading text-xs tracking-widest uppercase mb-1.5" style={{ color: "#cf6f95" }}>
           Nome *
         </label>
         <input
@@ -191,12 +207,12 @@ function AddGiftForm({ onAdded }: AddGiftFormProps) {
           required
           placeholder="Ex: Kit de Maquiagem"
           className="w-full px-4 py-2.5 rounded-lg font-body text-sm outline-none"
-          style={{ background: "#fdf8f2", border: "1px solid #e8d5b0", color: "#6b4c3b" }}
+          style={{ background: "#fff8fb", border: "1px solid #f0c6d6", color: "#8e1b4d" }}
         />
       </div>
 
       <div>
-        <label className="block font-heading text-xs tracking-widest uppercase mb-1.5" style={{ color: "#c9a96e" }}>
+        <label className="block font-heading text-xs tracking-widest uppercase mb-1.5" style={{ color: "#cf6f95" }}>
           Descrição
         </label>
         <input
@@ -205,13 +221,13 @@ function AddGiftForm({ onAdded }: AddGiftFormProps) {
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Ex: Paleta de sombras e batons"
           className="w-full px-4 py-2.5 rounded-lg font-body text-sm outline-none"
-          style={{ background: "#fdf8f2", border: "1px solid #e8d5b0", color: "#6b4c3b" }}
+          style={{ background: "#fff8fb", border: "1px solid #f0c6d6", color: "#8e1b4d" }}
         />
       </div>
 
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <label className="block font-heading text-xs tracking-widest uppercase mb-1.5" style={{ color: "#c9a96e" }}>
+          <label className="block font-heading text-xs tracking-widest uppercase mb-1.5" style={{ color: "#cf6f95" }}>
             Faixa de preço
           </label>
           <input
@@ -220,12 +236,12 @@ function AddGiftForm({ onAdded }: AddGiftFormProps) {
             onChange={(e) => setPriceRange(e.target.value)}
             placeholder="Ex: R$ 80 – R$ 150"
             className="w-full px-4 py-2.5 rounded-lg font-body text-sm outline-none"
-            style={{ background: "#fdf8f2", border: "1px solid #e8d5b0", color: "#6b4c3b" }}
+            style={{ background: "#fff8fb", border: "1px solid #f0c6d6", color: "#8e1b4d" }}
           />
         </div>
 
         <div>
-          <label className="block font-heading text-xs tracking-widest uppercase mb-1.5" style={{ color: "#c9a96e" }}>
+          <label className="block font-heading text-xs tracking-widest uppercase mb-1.5" style={{ color: "#cf6f95" }}>
             Link da loja
           </label>
           <input
@@ -234,13 +250,13 @@ function AddGiftForm({ onAdded }: AddGiftFormProps) {
             onChange={(e) => setStoreLink(e.target.value)}
             placeholder="https://..."
             className="w-full px-4 py-2.5 rounded-lg font-body text-sm outline-none"
-            style={{ background: "#fdf8f2", border: "1px solid #e8d5b0", color: "#6b4c3b" }}
+            style={{ background: "#fff8fb", border: "1px solid #f0c6d6", color: "#8e1b4d" }}
           />
         </div>
       </div>
 
       {error && (
-        <p className="font-body text-xs" style={{ color: "#e07a99" }}>{error}</p>
+        <p className="font-body text-xs" style={{ color: "#c41e63" }}>{error}</p>
       )}
 
       <div className="flex gap-2 pt-1">
@@ -248,7 +264,7 @@ function AddGiftForm({ onAdded }: AddGiftFormProps) {
           type="submit"
           disabled={loading || !name.trim()}
           className="flex-1 py-2.5 rounded-full font-heading text-sm tracking-wider text-white transition-all hover:scale-105 disabled:opacity-60"
-          style={{ background: "linear-gradient(135deg, #f4a7b9, #e07a99)" }}
+          style={{ background: "linear-gradient(135deg, #e0508a, #c41e63)" }}
         >
           {loading ? "Salvando..." : "Salvar presente"}
         </button>
@@ -256,7 +272,7 @@ function AddGiftForm({ onAdded }: AddGiftFormProps) {
           type="button"
           onClick={() => setOpen(false)}
           className="px-4 py-2.5 rounded-full font-heading text-sm tracking-wider transition-all"
-          style={{ border: "1px solid #e8d5b0", color: "#a07060" }}
+          style={{ border: "1px solid #f0c6d6", color: "#a85278" }}
         >
           Cancelar
         </button>
@@ -271,7 +287,7 @@ function ConfirmationsTab({ confirmations }: { confirmations: Confirmation[] }) 
   if (confirmations.length === 0) {
     return (
       <div className="text-center py-16">
-        <p className="font-heading text-sm" style={{ color: "#a07060" }}>
+        <p className="font-heading text-sm" style={{ color: "#a85278" }}>
           Nenhuma confirmação ainda.
         </p>
       </div>
@@ -281,21 +297,21 @@ function ConfirmationsTab({ confirmations }: { confirmations: Confirmation[] }) 
   return (
     <div className="space-y-3">
       {confirmations.map((c) => (
-        <div key={c.id} className="rounded-xl p-4" style={{ background: "white", border: "1px solid #e8d5b0" }}>
+        <div key={c.id} className="rounded-xl p-4" style={{ background: "white", border: "1px solid #f0c6d6" }}>
           <div className="flex items-start justify-between gap-3">
             <div className="flex-1">
-              <p className="font-heading text-base font-medium" style={{ color: "#6b4c3b" }}>{c.name}</p>
+              <p className="font-heading text-base font-medium" style={{ color: "#8e1b4d" }}>{c.name}</p>
               {c.message && (
-                <p className="font-body text-sm mt-1 italic" style={{ color: "#a07060" }}>
+                <p className="font-body text-sm mt-1 italic" style={{ color: "#a85278" }}>
                   "{c.message}"
                 </p>
               )}
             </div>
             <div className="text-right shrink-0">
-              <span className="font-body text-xs px-2 py-0.5 rounded-full" style={{ background: "#f9e4ec", color: "#e07a99" }}>
+              <span className="font-body text-xs px-2 py-0.5 rounded-full" style={{ background: "#fff1f6", color: "#c41e63" }}>
                 {c.guests === 0 ? "só eu" : `+${c.guests} acomp.`}
               </span>
-              <p className="font-body text-xs mt-1" style={{ color: "#c9a96e" }}>
+              <p className="font-body text-xs mt-1" style={{ color: "#cf6f95" }}>
                 {new Date(c.created_at).toLocaleDateString("pt-BR")}
               </p>
             </div>
@@ -306,27 +322,112 @@ function ConfirmationsTab({ confirmations }: { confirmations: Confirmation[] }) 
   );
 }
 
-function GiftsTab({ gifts, onGiftAdded }: { gifts: Gift[]; onGiftAdded: (g: Gift) => void }) {
+function GiftControlToggle({
+  enabled,
+  onChange,
+}: {
+  enabled: boolean;
+  onChange: (value: boolean) => void;
+}) {
+  const [saving, setSaving] = useState(false);
+
+  async function handleToggle() {
+    const next = !enabled;
+    setSaving(true);
+    // optimistic update
+    onChange(next);
+    try {
+      const res = await fetch("/api/settings", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ giftControlEnabled: next }),
+      });
+      if (!res.ok) throw new Error("Erro");
+    } catch {
+      // revert on failure
+      onChange(enabled);
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <div
+      className="rounded-xl p-4 flex items-center justify-between gap-4"
+      style={{ background: "white", border: "1px solid #f0c6d6" }}
+    >
+      <div>
+        <p className="font-heading text-sm font-medium" style={{ color: "#8e1b4d" }}>
+          Controle de presentes
+        </p>
+        <p className="font-body text-xs mt-0.5" style={{ color: "#a85278" }}>
+          {enabled
+            ? "A lista de presentes está visível para os convidados."
+            : "A lista de presentes está oculta para os convidados."}
+        </p>
+      </div>
+      <button
+        type="button"
+        role="switch"
+        aria-checked={enabled}
+        aria-label="Ativar controle de presentes"
+        disabled={saving}
+        onClick={handleToggle}
+        className="shrink-0 rounded-full transition-all disabled:opacity-60"
+        style={{
+          width: 48,
+          height: 28,
+          padding: 3,
+          background: enabled ? "linear-gradient(135deg, #e0508a, #c41e63)" : "#f0c6d6",
+        }}
+      >
+        <span
+          className="block rounded-full bg-white transition-transform"
+          style={{
+            width: 22,
+            height: 22,
+            transform: enabled ? "translateX(20px)" : "translateX(0)",
+            boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
+          }}
+        />
+      </button>
+    </div>
+  );
+}
+
+function GiftsTab({
+  gifts,
+  onGiftAdded,
+  giftControlEnabled,
+  onGiftControlChange,
+}: {
+  gifts: Gift[];
+  onGiftAdded: (g: Gift) => void;
+  giftControlEnabled: boolean;
+  onGiftControlChange: (value: boolean) => void;
+}) {
   const reserved = gifts.filter((g) => g.reserved);
   const available = gifts.filter((g) => !g.reserved);
 
   return (
     <div className="space-y-6">
+      <GiftControlToggle enabled={giftControlEnabled} onChange={onGiftControlChange} />
+
       <AddGiftForm onAdded={onGiftAdded} />
 
       {reserved.length > 0 && (
         <section>
-          <h3 className="font-heading text-xs tracking-widest uppercase mb-3" style={{ color: "#c9a96e" }}>
+          <h3 className="font-heading text-xs tracking-widest uppercase mb-3" style={{ color: "#cf6f95" }}>
             reservados ({reserved.length})
           </h3>
           <div className="space-y-2">
             {reserved.map((g) => (
-              <div key={g.id} className="rounded-xl p-4 flex items-center justify-between" style={{ background: "white", border: "1px solid #e8d5b0" }}>
+              <div key={g.id} className="rounded-xl p-4 flex items-center justify-between" style={{ background: "white", border: "1px solid #f0c6d6" }}>
                 <div>
-                  <p className="font-heading text-sm font-medium" style={{ color: "#6b4c3b" }}>{g.name}</p>
-                  <p className="font-body text-xs" style={{ color: "#a07060" }}>reservado por {g.reserved_by}</p>
+                  <p className="font-heading text-sm font-medium" style={{ color: "#8e1b4d" }}>{g.name}</p>
+                  <p className="font-body text-xs" style={{ color: "#a85278" }}>reservado por {g.reserved_by}</p>
                 </div>
-                <p className="font-body text-xs" style={{ color: "#c9a96e" }}>
+                <p className="font-body text-xs" style={{ color: "#cf6f95" }}>
                   {g.reserved_at ? new Date(g.reserved_at).toLocaleDateString("pt-BR") : ""}
                 </p>
               </div>
@@ -342,13 +443,13 @@ function GiftsTab({ gifts, onGiftAdded }: { gifts: Gift[]; onGiftAdded: (g: Gift
           </h3>
           <div className="space-y-2">
             {available.map((g) => (
-              <div key={g.id} className="rounded-xl p-4" style={{ background: "#fdf8f2", border: "1px solid #e8d5b0" }}>
-                <p className="font-heading text-sm font-medium" style={{ color: "#6b4c3b" }}>{g.name}</p>
+              <div key={g.id} className="rounded-xl p-4" style={{ background: "#fff8fb", border: "1px solid #f0c6d6" }}>
+                <p className="font-heading text-sm font-medium" style={{ color: "#8e1b4d" }}>{g.name}</p>
                 {g.description && (
-                  <p className="font-body text-xs mt-0.5" style={{ color: "#a07060" }}>{g.description}</p>
+                  <p className="font-body text-xs mt-0.5" style={{ color: "#a85278" }}>{g.description}</p>
                 )}
                 {g.price_range && (
-                  <p className="font-heading text-xs mt-1 tracking-wider" style={{ color: "#c9a96e" }}>{g.price_range}</p>
+                  <p className="font-heading text-xs mt-1 tracking-wider" style={{ color: "#cf6f95" }}>{g.price_range}</p>
                 )}
               </div>
             ))}
@@ -358,7 +459,7 @@ function GiftsTab({ gifts, onGiftAdded }: { gifts: Gift[]; onGiftAdded: (g: Gift
 
       {gifts.length === 0 && (
         <div className="text-center py-8">
-          <p className="font-heading text-sm" style={{ color: "#a07060" }}>
+          <p className="font-heading text-sm" style={{ color: "#a85278" }}>
             Nenhum presente cadastrado ainda.
           </p>
         </div>

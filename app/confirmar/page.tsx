@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-import FallingPetals from "@/components/FallingPetals";
+import PageShell from "@/components/PageShell";
+import { COLORS } from "@/components/theme";
+import { CheckIcon, UsersIcon } from "@/components/Icons";
 
 type Status = "idle" | "loading" | "success" | "error";
 
@@ -32,41 +33,25 @@ export default function ConfirmarPage() {
     }
   }
 
+  const labelCls = "block font-heading text-xs tracking-widest uppercase mb-1.5";
+  const inputCls = "w-full px-4 py-3 rounded-xl font-body text-sm outline-none transition-all";
+  const inputStyle = { background: "#fff8fb", border: `1px solid ${COLORS.petal}`, color: COLORS.wine };
+
   return (
-    <main
-      className="relative min-h-screen flex items-center justify-center px-4 py-12"
-      style={{
-        background: "linear-gradient(160deg, #fdf8f2 0%, #f9e4ec 35%, #fdf8f2 65%, #f5e6d3 100%)",
-      }}
-    >
-      <FallingPetals count={8} />
-
+    <PageShell title="Confirmar Presença" subtitle="nos diga que você vem!">
       <div
-        className="relative z-10 w-full max-w-md invitation-shadow rounded-2xl overflow-hidden"
-        style={{
-          background: "linear-gradient(160deg, #fdf8f2 0%, #f9e4ec 60%, #fdf8f2 100%)",
-          border: "1px solid #e8d5b0",
-        }}
+        className="rounded-2xl overflow-hidden"
+        style={{ background: "white", border: `1px solid ${COLORS.petal}`, boxShadow: "0 8px 30px rgba(196,30,99,0.10)" }}
       >
-        <div className="h-2" style={{ background: "linear-gradient(to right, #f4a7b9, #c9a96e, #f4a7b9)" }} />
+        <div className="h-1.5" style={{ background: "linear-gradient(to right, #e0508a, #b3155a, #e0508a)" }} />
 
-        <div className="px-8 py-10">
-          <div className="text-center mb-8">
-            <Ornament />
-            <h1 className="font-script text-4xl mb-1" style={{ color: "#e07a99" }}>
-              Confirmar Presença
-            </h1>
-            <p className="font-heading text-sm tracking-wider" style={{ color: "#a07060" }}>
-              nos diga que você vem! ✨
-            </p>
-          </div>
-
+        <div className="px-7 py-8">
           {status === "success" ? (
             <SuccessMessage />
           ) : (
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
-                <label className="block font-heading text-xs tracking-widest uppercase mb-1.5" style={{ color: "#c9a96e" }}>
+                <label className={labelCls} style={{ color: COLORS.pink }}>
                   Seu nome *
                 </label>
                 <input
@@ -75,39 +60,36 @@ export default function ConfirmarPage() {
                   onChange={(e) => setName(e.target.value)}
                   required
                   placeholder="Como devemos te chamar?"
-                  className="w-full px-4 py-3 rounded-xl font-body text-sm outline-none transition-all"
-                  style={{
-                    background: "#fdf8f2",
-                    border: "1px solid #e8d5b0",
-                    color: "#6b4c3b",
-                  }}
+                  className={inputCls}
+                  style={inputStyle}
                 />
               </div>
 
               <div>
-                <label className="block font-heading text-xs tracking-widest uppercase mb-1.5" style={{ color: "#c9a96e" }}>
+                <label className={labelCls} style={{ color: COLORS.pink }}>
                   Acompanhantes
                 </label>
-                <select
-                  value={guests}
-                  onChange={(e) => setGuests(Number(e.target.value))}
-                  className="w-full px-4 py-3 rounded-xl font-body text-sm outline-none"
-                  style={{
-                    background: "#fdf8f2",
-                    border: "1px solid #e8d5b0",
-                    color: "#6b4c3b",
-                  }}
-                >
-                  {[0, 1, 2, 3, 4, 5].map((n) => (
-                    <option key={n} value={n}>
-                      {n === 0 ? "Somente eu" : `${n} acompanhante${n > 1 ? "s" : ""}`}
-                    </option>
-                  ))}
-                </select>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: COLORS.rose }}>
+                    <UsersIcon size={18} />
+                  </span>
+                  <select
+                    value={guests}
+                    onChange={(e) => setGuests(Number(e.target.value))}
+                    className={inputCls + " pl-10 appearance-none"}
+                    style={inputStyle}
+                  >
+                    {[0, 1, 2, 3, 4, 5].map((n) => (
+                      <option key={n} value={n}>
+                        {n === 0 ? "Somente eu" : `${n} acompanhante${n > 1 ? "s" : ""}`}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
 
               <div>
-                <label className="block font-heading text-xs tracking-widest uppercase mb-1.5" style={{ color: "#c9a96e" }}>
+                <label className={labelCls} style={{ color: COLORS.pink }}>
                   Mensagem (opcional)
                 </label>
                 <textarea
@@ -115,17 +97,13 @@ export default function ConfirmarPage() {
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="Deixe um carinho para a Vanessa..."
                   rows={3}
-                  className="w-full px-4 py-3 rounded-xl font-body text-sm outline-none resize-none"
-                  style={{
-                    background: "#fdf8f2",
-                    border: "1px solid #e8d5b0",
-                    color: "#6b4c3b",
-                  }}
+                  className={inputCls + " resize-none"}
+                  style={inputStyle}
                 />
               </div>
 
               {status === "error" && (
-                <p className="text-sm text-center font-heading" style={{ color: "#e07a99" }}>
+                <p className="text-sm text-center font-heading" style={{ color: COLORS.pink }}>
                   Algo deu errado. Tente novamente.
                 </p>
               )}
@@ -133,54 +111,34 @@ export default function ConfirmarPage() {
               <button
                 type="submit"
                 disabled={status === "loading" || !name.trim()}
-                className="w-full py-3 rounded-full font-heading tracking-wider text-sm text-white transition-all duration-200 hover:scale-105 active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed"
-                style={{ background: "linear-gradient(135deg, #f4a7b9, #e07a99)" }}
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-full font-heading tracking-wider text-sm text-white transition-all duration-200 hover:scale-105 active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed"
+                style={{ background: "linear-gradient(135deg, #e0508a, #b3155a)" }}
               >
-                {status === "loading" ? "Confirmando..." : "Confirmar Presença ✓"}
+                {status === "loading" ? "Confirmando..." : (<><CheckIcon size={18} /> Confirmar Presença</>)}
               </button>
             </form>
           )}
-
-          <div className="mt-6 text-center">
-            <Link
-              href="/"
-              className="font-heading text-xs tracking-wider hover:underline"
-              style={{ color: "#c9a96e" }}
-            >
-              ← Voltar ao convite
-            </Link>
-          </div>
         </div>
-
-        <div className="h-2" style={{ background: "linear-gradient(to right, #f4a7b9, #c9a96e, #f4a7b9)" }} />
       </div>
-    </main>
+    </PageShell>
   );
 }
 
 function SuccessMessage() {
   return (
     <div className="text-center py-6">
-      <div className="text-5xl mb-4">🌸</div>
-      <h2 className="font-script text-3xl mb-2" style={{ color: "#e07a99" }}>
+      <div
+        className="mx-auto mb-5 flex items-center justify-center rounded-full"
+        style={{ width: 72, height: 72, color: "white", background: "linear-gradient(135deg, #e0508a, #b3155a)" }}
+      >
+        <CheckIcon size={36} />
+      </div>
+      <h2 className="font-script text-4xl mb-2" style={{ color: COLORS.pink }}>
         Presença confirmada!
       </h2>
-      <p className="font-heading text-sm" style={{ color: "#a07060" }}>
-        Que alegria! A Vanessa ficará feliz em ter você por lá. ✨
+      <p className="font-heading text-base" style={{ color: COLORS.mauve }}>
+        Que alegria! A Vanessa ficará feliz em ter você por lá.
       </p>
-      <div className="mt-6">
-        <Ornament />
-      </div>
-    </div>
-  );
-}
-
-function Ornament() {
-  return (
-    <div className="flex items-center justify-center gap-2 mb-4">
-      <span style={{ color: "#e8d5b0", fontSize: 12 }}>✦</span>
-      <span style={{ color: "#f4a7b9", fontSize: 16 }}>✿</span>
-      <span style={{ color: "#e8d5b0", fontSize: 12 }}>✦</span>
     </div>
   );
 }
