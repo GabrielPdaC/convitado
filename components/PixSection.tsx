@@ -65,33 +65,24 @@ export default function PixSection() {
             <HeartIcon size={15} style={{ color: COLORS.pink }} />
           </p>
 
-          {/* QR Code placeholder */}
+          {/* QR Code */}
           <div className="flex justify-center mb-5">
             <div
-              className="rounded-xl flex flex-col items-center justify-center"
+              className="rounded-xl p-3"
               style={{
-                width: 160,
-                height: 160,
                 background: "white",
-                border: `2px dashed ${COLORS.petal}`,
+                border: `1px solid ${COLORS.petal}`,
               }}
             >
-              <PixQRIcon />
-              <span className="font-heading text-xs mt-2" style={{ color: COLORS.rose }}>
-                QR Code Pix
-              </span>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/qrcode.png"
+                alt="QR Code Pix"
+                width={160}
+                height={160}
+                style={{ display: "block", width: 160, height: 160, objectFit: "contain" }}
+              />
             </div>
-          </div>
-
-          {/* Pix key display */}
-          <div
-            className="inline-flex items-center gap-2 rounded-full px-4 py-2 mb-2"
-            style={{ background: "#fff8fb", border: `1px solid ${COLORS.petal}` }}
-          >
-            <span className="font-heading text-xs" style={{ color: COLORS.mauve }}>Chave:</span>
-            <span className="font-heading text-sm font-medium" style={{ color: COLORS.wine, letterSpacing: "0.05em" }}>
-              {PIX_KEY}
-            </span>
           </div>
 
           <p className="font-heading text-xs mb-5" style={{ color: COLORS.rose }}>{PIX_NAME}</p>
@@ -118,40 +109,5 @@ export default function PixSection() {
         </div>
       </div>
     </div>
-  );
-}
-
-function PixQRIcon() {
-  return (
-    <svg width="72" height="72" viewBox="0 0 72 72" fill="none" aria-hidden="true">
-      {/* Top-left finder pattern */}
-      <rect x="8" y="8" width="20" height="20" rx="3" fill="none" stroke="#f4a7b9" strokeWidth="2.5" />
-      <rect x="13" y="13" width="10" height="10" rx="1.5" fill="#e07a99" />
-      {/* Top-right finder pattern */}
-      <rect x="44" y="8" width="20" height="20" rx="3" fill="none" stroke="#f4a7b9" strokeWidth="2.5" />
-      <rect x="49" y="13" width="10" height="10" rx="1.5" fill="#e07a99" />
-      {/* Bottom-left finder pattern */}
-      <rect x="8" y="44" width="20" height="20" rx="3" fill="none" stroke="#f4a7b9" strokeWidth="2.5" />
-      <rect x="13" y="49" width="10" height="10" rx="1.5" fill="#e07a99" />
-      {/* Data modules (decorative) */}
-      <rect x="36" y="36" width="4" height="4" rx="0.5" fill="#f4a7b9" />
-      <rect x="42" y="36" width="4" height="4" rx="0.5" fill="#c9a96e" />
-      <rect x="48" y="36" width="4" height="4" rx="0.5" fill="#f4a7b9" />
-      <rect x="54" y="36" width="4" height="4" rx="0.5" fill="#e07a99" />
-      <rect x="60" y="36" width="4" height="4" rx="0.5" fill="#f4a7b9" />
-      <rect x="36" y="42" width="4" height="4" rx="0.5" fill="#c9a96e" />
-      <rect x="48" y="42" width="4" height="4" rx="0.5" fill="#f4a7b9" />
-      <rect x="60" y="42" width="4" height="4" rx="0.5" fill="#c9a96e" />
-      <rect x="36" y="48" width="4" height="4" rx="0.5" fill="#f4a7b9" />
-      <rect x="42" y="48" width="4" height="4" rx="0.5" fill="#e07a99" />
-      <rect x="54" y="48" width="4" height="4" rx="0.5" fill="#f4a7b9" />
-      <rect x="36" y="54" width="4" height="4" rx="0.5" fill="#c9a96e" />
-      <rect x="42" y="54" width="4" height="4" rx="0.5" fill="#f4a7b9" />
-      <rect x="48" y="54" width="4" height="4" rx="0.5" fill="#e07a99" />
-      <rect x="60" y="54" width="4" height="4" rx="0.5" fill="#f4a7b9" />
-      <rect x="36" y="60" width="4" height="4" rx="0.5" fill="#f4a7b9" />
-      <rect x="48" y="60" width="4" height="4" rx="0.5" fill="#c9a96e" />
-      <rect x="54" y="60" width="4" height="4" rx="0.5" fill="#f4a7b9" />
-    </svg>
   );
 }

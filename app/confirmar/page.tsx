@@ -58,7 +58,7 @@ export default function ConfirmarPage() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
-                  placeholder="Como devemos te chamar?"
+                  placeholder="Nome completo"
                   className={inputCls}
                   style={inputStyle}
                 />
@@ -66,12 +66,12 @@ export default function ConfirmarPage() {
 
               <div>
                 <label className={labelCls} style={{ color: COLORS.pink }}>
-                  Mensagem (opcional)
+                  Recado (opcional)
                 </label>
                 <textarea
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  placeholder="Deixe um carinho para a Vanessa..."
+                  placeholder="Escreva aqui o seu recado..."
                   rows={3}
                   className={inputCls + " resize-none"}
                   style={inputStyle}
