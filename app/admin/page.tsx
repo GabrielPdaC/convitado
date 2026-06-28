@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import type { Confirmation, Gift } from "@/types";
 import { COLORS } from "@/components/theme";
-import { CheckIcon, UsersIcon, GiftIcon, ArrowLeftIcon } from "@/components/Icons";
+import { CheckIcon, UsersIcon, GiftIcon, ArrowLeftIcon, TrashIcon } from "@/components/Icons";
 
 type Tab = "confirmacoes" | "presentes";
 
@@ -31,6 +31,10 @@ export default function AdminPage() {
 
   function handleGiftAdded(gift: Gift) {
     setGifts((prev) => [...prev, gift]);
+  }
+
+  function handleConfirmationDeleted(id: string) {
+    setConfirmations((prev) => prev.filter((c) => c.id !== id));
   }
 
   const totalGuests = confirmations.reduce((sum, c) => sum + c.guests + 1, 0);
@@ -76,7 +80,7 @@ export default function AdminPage() {
             </p>
           </div>
         ) : tab === "confirmacoes" ? (
-          <ConfirmationsTab confirmations={confirmations} />
+          <ConfirmationsTab confirmations={confirmations} onDeleted={handleConfirmationDeleted} />
         ) : (
           <GiftsTab
             gifts={gifts}
@@ -283,7 +287,29 @@ function AddGiftForm({ onAdded }: AddGiftFormProps) {
 
 // ─── Tabs ─────────────────────────────────────────────────────────────────────
 
-function ConfirmationsTab({ confirmations }: { confirmations: Confirmation[] }) {
+function ConfirmationsTab({
+  confirmations,
+  onDeleted,
+}: {
+  confirmations: Confirmation[];
+  onDeleted: (id: string) => void;
+}) {
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  async function handleDelete(c: Confirmation) {
+    if (!window.confirm(`Excluir a confirmação de ${c.name}?`)) return;
+    setDeletingId(c.id);
+    try {
+      const res = await fetch(`/api/confirmations?id=${c.id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("Erro ao excluir");
+      onDeleted(c.id);
+    } catch {
+      window.alert("Não foi possível excluir. Tente novamente.");
+    } finally {
+      setDeletingId(null);
+    }
+  }
+
   if (confirmations.length === 0) {
     return (
       <div className="text-center py-16">
@@ -307,13 +333,26 @@ function ConfirmationsTab({ confirmations }: { confirmations: Confirmation[] }) 
                 </p>
               )}
             </div>
-            <div className="text-right shrink-0">
-              <span className="font-body text-xs px-2 py-0.5 rounded-full" style={{ background: "#fff1f6", color: "#c41e63" }}>
-                {c.guests === 0 ? "só eu" : `+${c.guests} acomp.`}
-              </span>
-              <p className="font-body text-xs mt-1" style={{ color: "#cf6f95" }}>
-                {new Date(c.created_at).toLocaleDateString("pt-BR")}
-              </p>
+            <div className="flex items-start gap-3 shrink-0">
+              <div className="text-right">
+                <span className="font-body text-xs px-2 py-0.5 rounded-full" style={{ background: "#fff1f6", color: "#c41e63" }}>
+                  {c.guests === 0 ? "só eu" : `+${c.guests} acomp.`}
+                </span>
+                <p className="font-body text-xs mt-1" style={{ color: "#cf6f95" }}>
+                  {new Date(c.created_at).toLocaleDateString("pt-BR")}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => handleDelete(c)}
+                disabled={deletingId === c.id}
+                aria-label={`Excluir confirmação de ${c.name}`}
+                title="Excluir"
+                className="flex items-center justify-center rounded-full transition-all hover:scale-110 active:scale-95 disabled:opacity-50"
+                style={{ width: 32, height: 32, color: "#c41e63", background: "#fff1f6", border: "1px solid #f0c6d6" }}
+              >
+                <TrashIcon size={16} />
+              </button>
             </div>
           </div>
         </div>

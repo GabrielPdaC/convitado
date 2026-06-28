@@ -7,14 +7,45 @@ import { ChevronDownIcon, CopyIcon, CheckIcon, HeartIcon } from "@/components/Ic
 const PIX_KEY = process.env.NEXT_PUBLIC_PIX_KEY ?? "";
 const PIX_NAME = process.env.NEXT_PUBLIC_PIX_NAME ?? "Vanessa";
 
+// Copia para a área de transferência. A Clipboard API só funciona em contexto
+// seguro (HTTPS/localhost); no celular via HTTP cai no fallback com textarea.
+async function copyToClipboard(text: string): Promise<boolean> {
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+  } catch {
+    // segue para o fallback
+  }
+
+  try {
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.setAttribute("readonly", "");
+    textarea.style.position = "fixed";
+    textarea.style.opacity = "0";
+    document.body.appendChild(textarea);
+    textarea.focus();
+    textarea.select();
+    const ok = document.execCommand("copy");
+    document.body.removeChild(textarea);
+    return ok;
+  } catch {
+    return false;
+  }
+}
+
 export default function PixSection() {
   const [expanded, setExpanded] = useState(true);
   const [copied, setCopied] = useState(false);
 
   async function handleCopy() {
-    await navigator.clipboard.writeText(PIX_KEY);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2500);
+    const ok = await copyToClipboard(PIX_KEY);
+    if (ok) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    }
   }
 
   return (
