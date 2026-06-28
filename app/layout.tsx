@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Dancing_Script, Lato } from "next/font/google";
 import "./globals.css";
+import { LayoutProvider } from "@/components/layout/LayoutContext";
+import LayoutEditor from "@/components/layout/LayoutEditor";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -32,7 +34,15 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR" className={`${cormorant.variable} ${dancing.variable} ${lato.variable}`}>
-      <body>{children}</body>
+      <head>
+        <meta name="color-scheme" content="light" />
+      </head>
+      <body>
+        <LayoutProvider>
+          {children}
+          <LayoutEditor />
+        </LayoutProvider>
+      </body>
     </html>
   );
 }

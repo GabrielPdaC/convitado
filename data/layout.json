@@ -1,0 +1,14 @@
+{
+  "closed.cornerTL": { "x": -8, "y": -4, "scale": 1, "flipX": false, "rotate": 0 },
+  "closed.cornerBL": { "x": -8, "y": -6, "scale": 1, "flipX": false, "rotate": 0 },
+  "closed.bouquetTR": { "x": -10, "y": -8, "scale": 1, "flipX": false, "rotate": 0 },
+  "closed.ramo": { "x": 6, "y": 121, "scale": 1, "flipX": false, "rotate": 16 },
+  "closed.bouquetBR": { "x": -10, "y": -10, "scale": 1, "flipX": false, "rotate": 0 },
+  "open.bouquetL": { "x": -18, "y": -14, "scale": 1, "flipX": true, "rotate": 0 },
+  "open.bouquetR": { "x": -18, "y": -14, "scale": 1, "flipX": false, "rotate": 0 },
+  "shell.bouquetL": { "x": -22, "y": -16, "scale": 1, "flipX": true, "rotate": 0 },
+  "shell.bouquetR": { "x": -22, "y": -16, "scale": 1, "flipX": false, "rotate": 0 },
+  "shell.butterfly1": { "x": 14, "y": 26, "scale": 1, "flipX": false, "rotate": 0 },
+  "shell.butterfly2": { "x": 18, "y": 34, "scale": 1, "flipX": true, "rotate": 0 },
+  "shell.butterfly3": { "x": 62, "y": 70, "scale": 1, "flipX": true, "rotate": 0 }
+}

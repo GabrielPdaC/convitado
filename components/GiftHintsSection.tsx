@@ -23,41 +23,37 @@ const HINT_GROUPS: HintGroup[] = [
     Icon: ShirtIcon,
     title: "Roupas",
     items: [
-      { label: "Blusas / vestidos", value: "M" },
-      { label: "Calças / shorts", value: "38" },
-      { label: "Estilo", value: "casual, fofo e delicado" },
+      { label: "Camisetas", value: "P / M" },
+      { label: "Shorts / calças", value: "38" },
     ],
   },
   {
     Icon: ShoeIcon,
     title: "Calçados",
     items: [
-      { label: "Tamanho", value: "36" },
-      { label: "Preferência", value: "tênis e sandálias" },
+      { label: "Tamanho", value: "37" },
+      { label: "Preferência", value: "tênis" },
+    ],
+  },
+  {
+    Icon: GemIcon,
+    title: "Acessórios",
+    items: [
+      { label: "Brincos, colares, anéis, pulseiras", value: "prata" },
+    ],
+  },
+  {
+    Icon: PaletteIcon,
+    title: "Cosméticos",
+    items: [
+      { label: "Perfume, creme corporal, body splash etc.", value: "doce e floral" },
     ],
   },
   {
     Icon: LipstickIcon,
     title: "Maquiagem",
     items: [
-      { label: "Paleta de sombras", value: "tons neutros e rosados" },
-      { label: "Batom", value: "nude / rosé" },
-      { label: "Base", value: "tom claro" },
-      { label: "Itens", value: "máscara de cílios, blush, iluminador" },
-    ],
-  },
-  {
-    Icon: PaletteIcon,
-    title: "Cores favoritas",
-    items: [{ label: "Preferidas", value: "rosa, lilás, off-white e dourado" }],
-  },
-  {
-    Icon: GemIcon,
-    title: "Acessórios & cuidados",
-    items: [
-      { label: "Acessórios", value: "brincos e colares delicados (prata)" },
-      { label: "Perfumes", value: "florais e adocicados" },
-      { label: "Skincare", value: "hidratante, protetor solar, lip balm" },
+      { label: "Ideias", value: "máscara de cílios, blush, gloss" },
     ],
   },
 ];
@@ -108,7 +104,7 @@ export default function GiftHintsSection() {
         }}
       >
         <p className="font-heading text-sm mt-3 mb-5" style={{ color: COLORS.mauve }}>
-          se quiser dar um presentinho, aqui vão algumas preferências dela
+          se quiser dar um presentinho, aqui vão algumas das minhas sugestões
         </p>
 
         <div className="space-y-3">
@@ -130,7 +126,7 @@ export default function GiftHintsSection() {
                     <span className="font-body text-xs" style={{ color: COLORS.mauve }}>
                       {item.label}
                     </span>
-                    <span className="font-heading text-xs text-right font-medium" style={{ color: COLORS.wine }}>
+                    <span className="font-body text-xs text-right font-semibold" style={{ color: COLORS.wine }}>
                       {item.value}
                     </span>
                   </div>

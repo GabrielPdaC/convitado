@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { COLORS, BLUSH_BG } from "@/components/theme";
 import { ArrowLeftIcon, SparkleIcon } from "@/components/Icons";
+import LayoutImage from "@/components/layout/LayoutImage";
 
 interface PageShellProps {
   title: string;
@@ -14,21 +15,9 @@ export default function PageShell({ title, subtitle, children, florals = true }:
   return (
     <main className="relative min-h-screen overflow-hidden" style={{ background: BLUSH_BG }}>
       {florals && (
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-px">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/florals/bouquet-1.png"
-            alt=""
-            aria-hidden="true"
-            style={{ position: "absolute", top: -16, left: -22, width: "42%", transform: "scaleX(-1)" }}
-          />
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/florals/bouquet-2.png"
-            alt=""
-            aria-hidden="true"
-            style={{ position: "absolute", top: -16, right: -22, width: "44%" }}
-          />
+        <div className="absolute inset-x-0 top-0 h-px">
+          <LayoutImage id="shell.bouquetL" />
+          <LayoutImage id="shell.bouquetR" />
         </div>
       )}
 
@@ -63,25 +52,10 @@ export default function PageShell({ title, subtitle, children, florals = true }:
       </div>
 
       {/* Discreet butterflies near the bottom */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-0" aria-hidden="true">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/florals/butterfly-1.png"
-          alt=""
-          style={{ position: "absolute", bottom: 26, left: 14, width: "clamp(54px, 16vw, 80px)", opacity: 0.7 }}
-        />
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/florals/butterfly-3.png"
-          alt=""
-          style={{ position: "absolute", bottom: 70, left: 62, width: "clamp(40px, 12vw, 58px)", opacity: 0.55, transform: "scaleX(-1)" }}
-        />
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/florals/butterfly-2.png"
-          alt=""
-          style={{ position: "absolute", bottom: 34, right: 18, width: "clamp(52px, 15vw, 76px)", opacity: 0.7, transform: "scaleX(-1)" }}
-        />
+      <div className="absolute inset-x-0 bottom-0 z-0" aria-hidden="true">
+        <LayoutImage id="shell.butterfly1" />
+        <LayoutImage id="shell.butterfly2" />
+        <LayoutImage id="shell.butterfly3" />
       </div>
     </main>
   );

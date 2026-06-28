@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { CheckIcon, MapPinIcon, GiftIcon } from "@/components/Icons";
+import LayoutImage from "@/components/layout/LayoutImage";
 
 const MAP_URL = "https://maps.app.goo.gl/xgmK8u5MJ6WbeM7R7";
 
@@ -74,20 +75,8 @@ function ClosedCard({ isOpening, onClick }: { isOpening: boolean; onClick: () =>
           boxShadow: "inset -16px 0 26px -18px rgba(120,110,90,0.35)",
         }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/florals/corner-tl.png"
-          alt=""
-          aria-hidden="true"
-          style={{ position: "absolute", top: -4, left: -8, width: "clamp(175px, 54vw, 235px)" }}
-        />
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/florals/corner-bl.png"
-          alt=""
-          aria-hidden="true"
-          style={{ position: "absolute", bottom: -6, left: -8, width: "clamp(160px, 50vw, 215px)" }}
-        />
+        <LayoutImage id="closed.cornerTL" />
+        <LayoutImage id="closed.cornerBL" />
       </div>
 
       {/* ── Right door ────────────────────────── */}
@@ -101,35 +90,9 @@ function ClosedCard({ isOpening, onClick }: { isOpening: boolean; onClick: () =>
           boxShadow: "inset 16px 0 26px -18px rgba(120,110,90,0.35)",
         }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/florals/bouquet-2.png"
-          alt=""
-          aria-hidden="true"
-          style={{ position: "absolute", top: -8, right: -10, width: "clamp(185px, 58vw, 245px)" }}
-        />
-        {/* ramo cascading from the top bouquet toward the seal */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/florals/ramo.png"
-          alt=""
-          aria-hidden="true"
-          style={{
-            position: "absolute",
-            top: "31vw",
-            right: "3%",
-            width: "clamp(62px, 21vw, 92px)",
-            transform: "rotate(16deg)",
-            transformOrigin: "top right",
-          }}
-        />
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/florals/bouquet-1.png"
-          alt=""
-          aria-hidden="true"
-          style={{ position: "absolute", bottom: -10, right: -10, width: "clamp(195px, 60vw, 255px)" }}
-        />
+        <LayoutImage id="closed.bouquetTR" />
+        <LayoutImage id="closed.ramo" />
+        <LayoutImage id="closed.bouquetBR" />
       </div>
 
       {/* ── Center fold line ──────────────────── */}
@@ -263,20 +226,8 @@ function OpenCard() {
     >
       {/* Floral top border */}
       <div className="relative h-px">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/florals/bouquet-1.png"
-          alt=""
-          aria-hidden="true"
-          style={{ position: "absolute", top: -14, left: -18, width: "48%", transform: "scaleX(-1)" }}
-        />
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/florals/bouquet-2.png"
-          alt=""
-          aria-hidden="true"
-          style={{ position: "absolute", top: -14, right: -18, width: "50%" }}
-        />
+        <LayoutImage id="open.bouquetL" />
+        <LayoutImage id="open.bouquetR" />
       </div>
 
       <div

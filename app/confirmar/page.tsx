@@ -3,13 +3,12 @@
 import { useState } from "react";
 import PageShell from "@/components/PageShell";
 import { COLORS } from "@/components/theme";
-import { CheckIcon, UsersIcon } from "@/components/Icons";
+import { CheckIcon } from "@/components/Icons";
 
 type Status = "idle" | "loading" | "success" | "error";
 
 export default function ConfirmarPage() {
   const [name, setName] = useState("");
-  const [guests, setGuests] = useState(0);
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState<Status>("idle");
 
@@ -23,7 +22,7 @@ export default function ConfirmarPage() {
       const res = await fetch("/api/confirmations", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: name.trim(), guests, message: message.trim() }),
+        body: JSON.stringify({ name: name.trim(), guests: 0, message: message.trim() }),
       });
 
       if (!res.ok) throw new Error("Erro ao confirmar");
@@ -63,29 +62,6 @@ export default function ConfirmarPage() {
                   className={inputCls}
                   style={inputStyle}
                 />
-              </div>
-
-              <div>
-                <label className={labelCls} style={{ color: COLORS.pink }}>
-                  Acompanhantes
-                </label>
-                <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: COLORS.rose }}>
-                    <UsersIcon size={18} />
-                  </span>
-                  <select
-                    value={guests}
-                    onChange={(e) => setGuests(Number(e.target.value))}
-                    className={inputCls + " pl-10 appearance-none"}
-                    style={inputStyle}
-                  >
-                    {[0, 1, 2, 3, 4, 5].map((n) => (
-                      <option key={n} value={n}>
-                        {n === 0 ? "Somente eu" : `${n} acompanhante${n > 1 ? "s" : ""}`}
-                      </option>
-                    ))}
-                  </select>
-                </div>
               </div>
 
               <div>

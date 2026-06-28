@@ -71,6 +71,10 @@
   50% { transform: translateX(8px); }
 }
 
+html {
+  color-scheme: only light;
+}
+
 body {
   background-color: var(--color-cream);
   color: var(--color-brown-text);
