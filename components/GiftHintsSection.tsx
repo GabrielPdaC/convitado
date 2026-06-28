@@ -59,7 +59,7 @@ const HINT_GROUPS: HintGroup[] = [
 ];
 
 export default function GiftHintsSection() {
-  const [expanded, setExpanded] = useState(true);
+  const [expanded, setExpanded] = useState(false);
 
   return (
     <div
@@ -70,16 +70,19 @@ export default function GiftHintsSection() {
         boxShadow: "0 4px 24px rgba(196,30,99,0.07)",
       }}
     >
-      {/* Header — always visible */}
-      <div className="flex items-center justify-between gap-4">
-        <p className="font-script text-2xl" style={{ color: COLORS.pink }}>
+      {/* Header — clicável por inteiro para expandir/recolher */}
+      <button
+        type="button"
+        onClick={() => setExpanded((v) => !v)}
+        aria-expanded={expanded}
+        aria-label={expanded ? "Recolher ideias" : "Expandir ideias"}
+        className="w-full flex items-center justify-between gap-4 text-left"
+      >
+        <span className="font-script text-2xl" style={{ color: COLORS.pink }}>
           Ideias de presente para a Vanessa
-        </p>
-        <button
-          onClick={() => setExpanded((v) => !v)}
-          aria-expanded={expanded}
-          aria-label={expanded ? "Recolher ideias" : "Expandir ideias"}
-          className="flex-shrink-0 flex items-center justify-center rounded-full transition-all duration-200 hover:scale-110 active:scale-95"
+        </span>
+        <span
+          className="flex-shrink-0 flex items-center justify-center rounded-full transition-all duration-200"
           style={{
             width: 32,
             height: 32,
@@ -91,8 +94,8 @@ export default function GiftHintsSection() {
           }}
         >
           <ChevronDownIcon size={16} />
-        </button>
-      </div>
+        </span>
+      </button>
 
       {/* Expandable content */}
       <div

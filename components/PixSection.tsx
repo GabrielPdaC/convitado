@@ -37,7 +37,7 @@ async function copyToClipboard(text: string): Promise<boolean> {
 }
 
 export default function PixSection() {
-  const [expanded, setExpanded] = useState(true);
+  const [expanded, setExpanded] = useState(false);
   const [copied, setCopied] = useState(false);
 
   async function handleCopy() {
@@ -57,16 +57,19 @@ export default function PixSection() {
         boxShadow: "0 4px 24px rgba(196,30,99,0.08)",
       }}
     >
-      {/* Header — always visible */}
-      <div className="flex items-center justify-between gap-4">
-        <p className="font-script text-2xl" style={{ color: COLORS.pink }}>
+      {/* Header — clicável por inteiro para expandir/recolher */}
+      <button
+        type="button"
+        onClick={() => setExpanded((v) => !v)}
+        aria-expanded={expanded}
+        aria-label={expanded ? "Recolher Pix" : "Expandir Pix"}
+        className="w-full flex items-center justify-between gap-4 text-left"
+      >
+        <span className="font-script text-2xl" style={{ color: COLORS.pink }}>
           Se preferir, você pode fazer o Pix
-        </p>
-        <button
-          onClick={() => setExpanded((v) => !v)}
-          aria-expanded={expanded}
-          aria-label={expanded ? "Recolher Pix" : "Expandir Pix"}
-          className="flex-shrink-0 flex items-center justify-center rounded-full transition-all duration-200 hover:scale-110 active:scale-95"
+        </span>
+        <span
+          className="flex-shrink-0 flex items-center justify-center rounded-full transition-all duration-200"
           style={{
             width: 32,
             height: 32,
@@ -78,8 +81,8 @@ export default function PixSection() {
           }}
         >
           <ChevronDownIcon size={16} />
-        </button>
-      </div>
+        </span>
+      </button>
 
       {/* Expandable content */}
       <div
